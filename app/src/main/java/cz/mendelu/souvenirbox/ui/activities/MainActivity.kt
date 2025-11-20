@@ -1,4 +1,4 @@
-package cz.mendelu.souvenirbox
+package cz.mendelu.souvenirbox.ui.activities
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
