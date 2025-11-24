@@ -66,17 +66,17 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 
     // Navigation
     implementation(libs.navigation.fragment)
@@ -84,30 +84,38 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation(libs.kotlin.serialization.json)
 
-    // Datastore
-    implementation(libs.datastore.core)
-    implementation(libs.datastore.preferences)
+    // Room
+    implementation(libs.room.ktx)
+    implementation(libs.room.viewmodel)
+    implementation(libs.room.lifecycle)
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler.ksp)
 
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.compose)
     ksp(libs.hilt.compiler.ksp)
 
-    // Moshi
+    // Datastore
+    implementation(libs.datastore.core)
+    implementation(libs.datastore.preferences)
+
+    // Splashscreen
+    implementation(libs.splashscreen)
+
+    // Google maps
+    implementation(libs.googlemap)
+    implementation(libs.googlemap.compose)
+    implementation(libs.googlemap.foundation)
+
+    // Moshi serialization
     implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
     ksp(libs.moshi.ksp)
 
-    // Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.moshi)
-    implementation(libs.retrofit.okhtt3)
-
-    // coil
-    implementation(libs.coil)
-
-    // Splashscreen
-    implementation(libs.splashscreen)
+    //images
+    implementation (libs.tedimagepicker)
+    implementation(libs.coil.compose)
 
     // Testing hilt
     androidTestImplementation(libs.hilt.android.testing)
