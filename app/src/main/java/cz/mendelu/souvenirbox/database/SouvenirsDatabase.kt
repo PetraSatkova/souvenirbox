@@ -21,7 +21,7 @@ abstract class SouvenirsDatabase : RoomDatabase() {
                         INSTANCE = databaseBuilder(
                             context.applicationContext,
                             SouvenirsDatabase::class.java,
-                            "places_database"
+                            "souvenirs_database"
                         ).fallbackToDestructiveMigration(false).build()
                     }
                 }

@@ -1,6 +1,7 @@
 package cz.mendelu.souvenirbox.di
 
 import android.content.Context
+import cz.mendelu.souvenirbox.database.SouvenirsDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +15,7 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context) : PlacesDatabase {
-        return PlacesDatabase.getDatabase(context)
+    fun provideDatabase(@ApplicationContext context: Context) : SouvenirsDatabase {
+        return SouvenirsDatabase.getDatabase(context)
     }
 }

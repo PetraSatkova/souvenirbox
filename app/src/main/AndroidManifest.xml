@@ -14,16 +14,21 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.SouvenirBox">
+
         <activity
-            android:name=".ui.activities.MainActivity"
+            android:name=".ui.activities.SplashScreenActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.SouvenirBox">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.SouvenirBox">
         </activity>
     </application>
 

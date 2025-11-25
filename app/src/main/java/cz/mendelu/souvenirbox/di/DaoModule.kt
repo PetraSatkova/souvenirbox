@@ -1,5 +1,7 @@
 package cz.mendelu.souvenirbox.di
 
+import cz.mendelu.souvenirbox.database.SouvenirsDao
+import cz.mendelu.souvenirbox.database.SouvenirsDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,7 +13,7 @@ import javax.inject.Singleton
 object DaoModule {
     @Provides
     @Singleton
-    fun provideDao(database: PlacesDatabase) : PlacesDao {
-        return database.placesDao()
+    fun provideDao(database: SouvenirsDatabase) : SouvenirsDao {
+        return database.souvenirsDao()
     }
 }

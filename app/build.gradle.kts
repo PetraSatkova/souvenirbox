@@ -114,8 +114,13 @@ dependencies {
     ksp(libs.moshi.ksp)
 
     //images
-    implementation (libs.tedimagepicker)
+//    implementation (libs.tedimagepicker)
     implementation(libs.coil.compose)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.moshi)
+    implementation(libs.retrofit.okhtt3)
 
     // Testing hilt
     androidTestImplementation(libs.hilt.android.testing)
