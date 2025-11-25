@@ -7,7 +7,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cz.mendelu.souvenirbox.ui.screens.addEditSouvenir.AddEditScreen
 import cz.mendelu.souvenirbox.ui.screens.dashboard.DashboardScreen
+import cz.mendelu.souvenirbox.ui.screens.map.MapScreen
+import cz.mendelu.souvenirbox.ui.screens.settings.SettingsScreen
+import cz.mendelu.souvenirbox.ui.screens.souvenirDetail.SouvenirDetailScreen
 import cz.mendelu.souvenirbox.ui.screens.souvenirsList.SouvenirsListScreen
 
 @ExperimentalFoundationApi
@@ -39,36 +43,36 @@ fun NavGraph(
             )
         }
 
-//        composable(
-//            route = Destination.SouvenirDetailScreen.route
-//        ) {
-//            SouvenirDetailScreen(
-//                navigation = navRouter
-//            )
-//        }
-//
-//        composable(
-//            route = Destination.AddEditSouvenirScreen.route
-//        ) {
-//            AddEditSouvenirScreen(
-//                navigation = navRouter
-//            )
-//        }
-//
-//        composable(
-//            route = Destination.MapScreen.route
-//        ) {
-//            MapScreen(
-//                navigation = navRouter
-//            )
-//        }
-//
-//        composable(
-//            route = Destination.SettingsScreen.route
-//        ) {
-//            SettingsScreen(
-//                navigation = navRouter
-//            )
-//        }
+        composable(
+            route = Destination.SouvenirDetailScreen.route
+        ) {
+            SouvenirDetailScreen(
+                navigation = navRouter
+            )
+        }
+
+        composable(
+            route = Destination.AddEditSouvenirScreen.route
+        ) {
+            AddEditScreen(
+                navigation = navRouter
+            )
+        }
+
+        composable(
+            route = Destination.MapScreen.route
+        ) {
+            MapScreen(
+                navigation = navRouter
+            )
+        }
+
+        composable(
+            route = Destination.SettingsScreen.route
+        ) {
+            SettingsScreen(
+                navigation = navRouter
+            )
+        }
     }
 }
