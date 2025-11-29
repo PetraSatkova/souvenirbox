@@ -1,10 +1,12 @@
 package cz.mendelu.souvenirbox.ui.screens.souvenirsList
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import cz.mendelu.souvenirbox.database.ISouvenirsLocalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,6 +18,13 @@ class SouvenirsListViewModel @Inject constructor(
     val uiState: StateFlow<SouvenirsListUIState> get() = _uiState
 
     fun loadSouvenirs() {
-
+        viewModelScope.launch {
+            souvenirsLocalRepository.getAll().collect { souvenirs ->
+                _uiState.value = _uiState.value.copy(
+                    souvenirs = souvenirs,
+                    loading = false
+                )
+            }
+        }
     }
 }

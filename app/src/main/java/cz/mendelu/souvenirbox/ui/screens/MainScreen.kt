@@ -1,6 +1,5 @@
 package cz.mendelu.souvenirbox.ui.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,11 +33,21 @@ fun MainScreen(
         NavigationRouterImpl(navHostController)
     }
 ) {
+    val bottomBarRoutes = listOf(
+        Destination.DashboardScreen.route,
+        Destination.SouvenirsListScreen.route,
+        Destination.MapScreen.route,
+        Destination.SettingsScreen.route
+    )
 
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
-        bottomBar = { BottomNavigationBar(navHostController) },
+        bottomBar = {
+            if (currentRoute(navHostController) in bottomBarRoutes) {
+                BottomNavigationBar(navController = navHostController)
+            }
+        },
         floatingActionButton = {
             if (currentRoute(navHostController) == Destination.SouvenirsListScreen.route) {
                 ExtendedFloatingActionButton(
@@ -48,12 +57,12 @@ fun MainScreen(
                 ) {
                     Icon(
                         Icons.Default.Add,
-                        contentDescription = "add place"
+                        contentDescription = "add souvenir"
                     )
 
                     Spacer(modifier = Modifier.width(halfMargin()))
 
-                    Text(text = "Add place")
+                    Text(text = "Add Souvenir")
                 }
             }
         }

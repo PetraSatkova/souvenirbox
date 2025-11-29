@@ -28,7 +28,7 @@ const val TestTagPlaceHolderImage = "TestTagPlaceHolderImage"
 data class PlaceholderScreenContent(
     val image: Int?,
     val title: String?,
-    val text: String?,
+    val text: String? = null,
     val buttonText: String? = null,
     val onButtonClick: (() -> Unit)? = null
 )

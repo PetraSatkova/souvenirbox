@@ -55,7 +55,8 @@ fun NavGraph(
             route = Destination.AddEditSouvenirScreen.route
         ) {
             AddEditScreen(
-                navigation = navRouter
+                navigation = navRouter,
+                id = null
             )
         }
 

@@ -8,9 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cz.mendelu.souvenirbox.R
+import cz.mendelu.souvenirbox.ui.theme.appBlue
 
 const val TestTagBackButton = "TestTagBackButton"
 
@@ -34,6 +36,8 @@ fun BaseScreen(
                             Text(
                                 text = topBarText,
                                 style = MaterialTheme.typography.titleLarge,
+                                color = appBlue,
+                                fontWeight = FontWeight.Bold,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 modifier = Modifier

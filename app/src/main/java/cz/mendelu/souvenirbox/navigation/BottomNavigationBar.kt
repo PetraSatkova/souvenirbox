@@ -19,7 +19,7 @@ fun BottomNavigationBar(
     navController: NavController
 ) {
     val selectedNavigationIndex = rememberSaveable {
-        mutableIntStateOf(1)
+        mutableIntStateOf(0)
     }
 
     val navigationItems = listOf(
