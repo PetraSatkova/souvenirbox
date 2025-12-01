@@ -19,7 +19,11 @@ class AddEditViewModel @Inject constructor(
     val uiState: StateFlow<AddEditUIState> get() = _uiState
 
     fun loadSouvenir(id: Long?) {
-
+        if (id != null) {
+            viewModelScope.launch {
+                val souvenir = souvenirsLocalRepository.getSouvenirById(id)
+            }
+        }
     }
 
     override fun onNameChanged(text: String) {
@@ -31,7 +35,12 @@ class AddEditViewModel @Inject constructor(
     }
 
     override fun onLocationChanged() {
-        TODO("Not yet implemented")
+        _uiState.value = _uiState.value.copy(
+            souvenir = _uiState.value.souvenir?.copy(
+                latitude = 48.1,
+                longitude = 54.8
+            )
+        )
     }
 
     override fun onPriceChanged(price: Double) {

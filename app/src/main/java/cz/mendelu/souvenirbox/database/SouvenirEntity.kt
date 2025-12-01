@@ -2,7 +2,6 @@ package cz.mendelu.souvenirbox.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.Date
 
 @Entity(tableName = "souvenirs")
 data class SouvenirEntity (

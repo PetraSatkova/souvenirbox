@@ -1,7 +1,8 @@
 package cz.mendelu.souvenirbox.utils
 
-import androidx.compose.ui.text.intl.Locale
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Calendar
 
 class DateUtils {
@@ -22,5 +23,20 @@ class DateUtils {
             }
             return format.format(calendar.getTime())
         }
+
+        fun getYearBounds(year: Int, zoneId: ZoneId = ZoneId.systemDefault()): Pair<Long, Long> {
+            val startOfYear = LocalDate.of(year, 1, 1)
+                .atStartOfDay(zoneId)
+                .toInstant()
+                .toEpochMilli()
+
+            val startOfNextYear = LocalDate.of(year + 1, 1, 1)
+                .atStartOfDay(zoneId)
+                .toInstant()
+                .toEpochMilli()
+
+            return startOfYear to startOfNextYear
+        }
+
     }
 }
