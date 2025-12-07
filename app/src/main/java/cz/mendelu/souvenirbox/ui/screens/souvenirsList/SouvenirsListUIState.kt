@@ -4,5 +4,5 @@ import cz.mendelu.souvenirbox.database.SouvenirEntity
 
 data class SouvenirsListUIState(
     var loading: Boolean = true,
-    val souvenirs: List<SouvenirEntity> = emptyList()
+    val souvenirs: List<SouvenirEntity>? = null
 )

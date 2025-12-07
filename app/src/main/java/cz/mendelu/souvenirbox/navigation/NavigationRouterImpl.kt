@@ -8,11 +8,21 @@ class NavigationRouterImpl(private val navController: NavController) : INavigati
     }
 
     override fun navigateToSouvenirDetail(id: Long) {
-        navController.navigate(route = Destination.SouvenirDetailScreen.route)
+        navController.navigate(route = Destination.SouvenirDetailScreen.getRouteWithArgument(id)) {
+            launchSingleTop = true
+        }
     }
 
     override fun navigateToAddEdit(id: Long?) {
-        navController.navigate(route = Destination.AddEditSouvenirScreen.route)
+        if (id != null) {
+            navController.navigate(route = Destination.AddEditSouvenirScreen.getRouteWithArgument(id)) {
+                launchSingleTop = true
+            }
+        } else {
+            navController.navigate(route = Destination.AddEditSouvenirScreen.route) {
+                launchSingleTop = true
+            }
+        }
     }
 
     override fun navigateToMap() {

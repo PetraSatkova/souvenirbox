@@ -1,14 +1,12 @@
 package cz.mendelu.souvenirbox.database
 
-import cz.mendelu.souvenirbox.utils.DateUtils
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SouvenirsLocalRepositoryImpl @Inject constructor(
     private var souvenirsDao: SouvenirsDao
 ) : ISouvenirsLocalRepository {
 
-    override fun getAllSouvenirs(): Flow<List<SouvenirEntity>> {
+    override suspend fun getAllSouvenirs(): List<SouvenirEntity> {
         return souvenirsDao.getAllSouvenirs()
     }
 
@@ -16,18 +14,7 @@ class SouvenirsLocalRepositoryImpl @Inject constructor(
         return souvenirsDao.getSouvenirById(id)
     }
 
-    override suspend fun getSouvenirsForYear(): Flow<List<SouvenirEntity>> {
-        return souvenirsDao.getSouvenirsForYear(
-            startOfYear = DateUtils.getYearBounds(2025).first,
-            startOfNextYear = DateUtils.getYearBounds(2025).second
-        )
-    }
-
-    override suspend fun getRecentlyAddedSouvenirs(): Flow<List<SouvenirEntity>> {
-        return souvenirsDao.getRecentlyAddedSouvenirs()
-    }
-
-    override suspend fun createSouvenir(souvenir: SouvenirEntity) {
+    override suspend fun createSouvenir(souvenir: SouvenirEntity): Long {
         return souvenirsDao.createSouvenir(souvenir)
     }
 
@@ -35,8 +22,8 @@ class SouvenirsLocalRepositoryImpl @Inject constructor(
         return souvenirsDao.updateSouvenir(souvenir)
     }
 
-    override suspend fun deleteSouvenir(id: Long) {
-        return souvenirsDao.deleteSouvenir(id)
+    override suspend fun deleteSouvenir(souvenir: SouvenirEntity) {
+        return souvenirsDao.deleteSouvenir(souvenir)
 
     }
 

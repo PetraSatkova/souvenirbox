@@ -1,10 +1,26 @@
 package cz.mendelu.souvenirbox.ui.screens.addEditSouvenir
 
-import cz.mendelu.souvenirbox.database.SouvenirEntity
-
 data class AddEditUIState(
+    var id: Long? = null,
+    var name: String? = null,
+    var latitude: Double? = null,
+    var longitude: Double? = null,
+    var city: String? = null,
+    var price: Double? = null,
+    var currency: String? = null,
+    var date: Long? = null,
+    var notes: String? = null,
+    var imageUri: String? = null,
+
     var loading: Boolean = true,
-    val souvenir: SouvenirEntity? = null,
     var souvenirSaved: Boolean = false,
-    val currencyList: List<String> = listOf("CZK", "EUR", "USD")
+    var saveError: Boolean = false,
+
+    val currencyList: List<String> = listOf("CZK", "EUR", "USD"),
+
+    var nameError: Boolean = false,
+    var cityError: Boolean = false,
+    var priceError: Boolean = false,
+    var currencyError: Boolean = false,
+    var dateError: Boolean = false
 )

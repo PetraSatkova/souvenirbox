@@ -7,20 +7,21 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
 import cz.mendelu.souvenirbox.R
 
 @Composable
 fun BottomNavigationBar(
     navController: NavController
 ) {
-    val selectedNavigationIndex = rememberSaveable {
-        mutableIntStateOf(0)
-    }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
 
     val navigationItems = listOf(
         NavigationItem(
@@ -46,29 +47,35 @@ fun BottomNavigationBar(
     )
 
     NavigationBar(
-        containerColor = Color.White
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
     ) {
         navigationItems.forEachIndexed { index, item ->
+            val selected = currentDestination
+                ?.hierarchy
+                ?.any { it.route == item.route } == true
+
             NavigationBarItem(
-                selected = selectedNavigationIndex.intValue == index,
+                selected = selected,
                 onClick = {
-                    selectedNavigationIndex.intValue = index
-                    navController.navigate(item.route)
+                    navController.navigate(item.route) {
+                        launchSingleTop = true
+                    }
                 },
                 icon = {
-                    Icon(painter = painterResource(id = item.icon), contentDescription = item.title)
+                    Icon(
+                        painter = painterResource(id = item.icon),
+                        contentDescription = item.title
+                    )
                 },
                 label = {
                     Text(
                         item.title,
-                        color = if (index == selectedNavigationIndex.intValue)
-                            Color.Black
-                        else Color.Gray
+                        color = Color.Black
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.surface,
-                    indicatorColor = MaterialTheme.colorScheme.primary
+                    indicatorColor = colorResource(R.color.app_blue)
                 )
 
             )

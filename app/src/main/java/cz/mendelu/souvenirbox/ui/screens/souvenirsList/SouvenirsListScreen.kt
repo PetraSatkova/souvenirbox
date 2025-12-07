@@ -58,18 +58,9 @@ fun SouvenirsListScreen(
 
     BaseScreen(
         topBarText = "My Souvenirs",
-        showLoading = true,
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navigation.navigateToAddEdit(id = null)
-                }
-            ) {
-                Icon(Icons.Filled.Add, "add")
-            }
-        },
+        showLoading = state.value.loading,
         placeholderScreenContent =
-            if (state.value.souvenirs.isEmpty()) {
+            if (state.value.souvenirs == null) {
                 PlaceholderScreenContent(
                     title = "No places registered yet!",
                     image = R.drawable.undraw_no_data
@@ -92,12 +83,12 @@ fun SouvenirsListScreen(
 fun SouvenirsListScreenContent(
     paddingValues: PaddingValues,
     navigation: INavigationRouter,
-    souvenirs: List<SouvenirEntity>
+    souvenirs: List<SouvenirEntity>?
 ) {
     LazyColumn(
         modifier = Modifier.padding(paddingValues)
     ) {
-        souvenirs.forEach { souvenir ->
+        souvenirs?.forEach { souvenir ->
             item { // todo my colors
                 Card(
                     onClick = {

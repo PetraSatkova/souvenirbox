@@ -19,12 +19,12 @@ class SouvenirsListViewModel @Inject constructor(
 
     fun loadSouvenirs() {
         viewModelScope.launch {
-            souvenirsLocalRepository.getAll().collect { souvenirs ->
-                _uiState.value = _uiState.value.copy(
-                    souvenirs = souvenirs,
-                    loading = false
-                )
-            }
+            val souvenirs = souvenirsLocalRepository.getAllSouvenirs()
+            _uiState.value = _uiState.value.copy(
+                souvenirs = souvenirs,
+                loading = false
+            )
+
         }
     }
 }

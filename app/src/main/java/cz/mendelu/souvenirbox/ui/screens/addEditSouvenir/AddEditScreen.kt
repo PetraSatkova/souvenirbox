@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -66,12 +67,13 @@ fun AddEditScreen(
         viewModel.loadSouvenir(id)
     }
 
-    if (state.value.souvenirSaved)
+    if (state.value.souvenirSaved) {
         navigation.returnBack()
+        viewModel.souvenirSavedDefault()
+    }
 
     BaseScreen(
         topBarText = if (id == null) "Add Souvenir" else "Edit Souvenir",
-        showLoading = id != null,
         onBackClick = {
             navigation.returnBack()
         }
@@ -90,6 +92,8 @@ fun AddEditScreenContent(
     state: AddEditUIState,
     actions: AddEditActions
 ) {
+    val context = LocalContext.current
+
     var showDatePicker by remember {
         mutableStateOf(false)
     }
@@ -103,7 +107,7 @@ fun AddEditScreenContent(
             .fillMaxSize(),
 
     ) {
-        // image
+        // image TODO clickable
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -111,9 +115,9 @@ fun AddEditScreenContent(
                 .clip(RoundedCornerShape(16.dp)),
             contentAlignment = Alignment.Center
         ) {
-            if (state.souvenir?.imageUri != null) {
+            if (state.imageUri != null) {
                 Image(
-                    painter = rememberAsyncImagePainter(model = state.souvenir.imageUri),
+                    painter = rememberAsyncImagePainter(model = state.imageUri),
                     contentDescription = "img",
                     modifier = Modifier
                         .size(100.dp)
@@ -130,18 +134,19 @@ fun AddEditScreenContent(
 
         CustomTextField(
             title = "Name",
-            value = state.souvenir?.name ?: "",
+            value = state.name ?: "",
             onValueChange = {
                 actions.onNameChanged(it)
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(halfMargin())
+                .padding(halfMargin()),
+            isError = state.nameError
         )
 
         Spacer(modifier = Modifier.height(halfMargin()))
 
-        // todo show map
+        // todo show map - nebude mat onvaluechange, ale bude clickable
         CustomTextField(
             title = "Location",
             value = "Oslo",
@@ -150,7 +155,9 @@ fun AddEditScreenContent(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(halfMargin())
+                .padding(halfMargin()),
+            readonly = true,
+            isError = state.cityError
         )
 
         Spacer(modifier = Modifier.height(halfMargin()))
@@ -164,23 +171,29 @@ fun AddEditScreenContent(
         ) {
             CustomTextField(
                 title = "Price",
-                value = state.souvenir?.price?.toString() ?: "",
+                value = state.price?.toString() ?: "",
                 onValueChange = {
-                    actions.onPriceChanged(it.toDoubleOrNull() ?: 0.0)
+                    actions.onPriceChanged(it.toDoubleOrNull())
                 },
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(1f),
+                isError = state.priceError
             )
 
             Box(
-                modifier = Modifier.weight(1f).clickable { isCurrencyExpanded = true },
+                modifier = Modifier
+                    .weight(1f)
             ) {
                 CustomTextField(
                     title = "Currency",
-                    value = state.souvenir?.currency ?: "",
+                    value = state.currency ?: "",
                     onValueChange = {},
                     readonly = true,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            isCurrencyExpanded = true
+                        }
                 )
 
                 DropdownMenu(
@@ -209,30 +222,30 @@ fun AddEditScreenContent(
 
         if (showDatePicker) {
             CustomDatePickerDialog(
-                date = state.souvenir?.date ,
+                date = state.date ,
                 onDateSelected = { actions.onDateChanged(it) },
                 onDismiss = { showDatePicker = false }
             )
         }
 
         InfoElement(
-            value = if (state.souvenir?.date != null) DateUtils.getDateString(state.souvenir.date) else null,
+            value = if (state.date != null) DateUtils.getDateString(state.date!!) else null,
             hint = "Date",
             leadingIcon = Icons.Default.DateRange,
             onClick = {
                 showDatePicker = true
             },
             onClearClick = {
-//                actions.onDateChanged(date = )
+                actions.onDateChanged(date = null)
             },
-            error = false
+            error = state.dateError
         )
 
         Spacer(modifier = Modifier.height(halfMargin()))
 
         CustomTextField(
             title = "Notes",
-            value = state.souvenir?.notes ?: "",
+            value = state.notes ?: "",
             onValueChange = {
                 actions.onNotesChanged(it)
             },
@@ -245,21 +258,18 @@ fun AddEditScreenContent(
 
         Button(
             onClick = {
-                actions.saveSouvenir()
+                actions.saveSouvenir(
+                    context = context,
+                    id = state.id
+                )
             },
-            enabled = true,
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(halfMargin()),
-            colors = ButtonColors(
-                containerColor = appBlue,
-                contentColor = Color.White,
-                disabledContainerColor = Color.Gray,
-                disabledContentColor = Color.Black
-            )
+//            colors = ButtonColors()
         ) {
-            Text(text = if (state.souvenir != null) "Update" else "Save")
+            Text(text = if (state.id != null) "Update" else "Save")
         }
     }
 }
@@ -270,7 +280,8 @@ fun CustomTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    readonly: Boolean = false
+    isError: Boolean = false,
+    readonly: Boolean = false,
 ) {
     OutlinedTextField(
         value = value,
@@ -284,6 +295,7 @@ fun CustomTextField(
             )
         },
         modifier = modifier,
-        readOnly = readonly
+        readOnly = readonly,
+        isError = isError
     )
 }

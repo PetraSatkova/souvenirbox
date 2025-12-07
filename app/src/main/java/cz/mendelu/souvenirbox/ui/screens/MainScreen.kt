@@ -14,10 +14,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import cz.mendelu.souvenirbox.R
 import cz.mendelu.souvenirbox.navigation.BottomNavigationBar
 import cz.mendelu.souvenirbox.navigation.Destination
 import cz.mendelu.souvenirbox.navigation.INavigationRouter
@@ -53,7 +55,8 @@ fun MainScreen(
                 ExtendedFloatingActionButton(
                     onClick = {
                         navRouter.navigateToAddEdit(id = null)
-                    }
+                    },
+                    containerColor = colorResource(R.color.app_tyrkys)
                 ) {
                     Icon(
                         Icons.Default.Add,
