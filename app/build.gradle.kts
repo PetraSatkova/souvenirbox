@@ -1,4 +1,5 @@
 import java.util.Properties
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
@@ -51,9 +52,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.fromTarget("11")
+        }
     }
+
     buildFeatures {
         compose = true
         buildConfig = true
@@ -70,6 +74,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation(libs.androidx.compose.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -107,6 +113,9 @@ dependencies {
     implementation(libs.googlemap)
     implementation(libs.googlemap.compose)
     implementation(libs.googlemap.foundation)
+    implementation(libs.googlemap.utils)
+    implementation(libs.googlemap.widgets)
+    implementation(libs.googlemap.compose.utils)
 
     // Moshi serialization
     implementation(libs.moshi)

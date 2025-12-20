@@ -4,8 +4,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -19,6 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
+import cz.mendelu.souvenirbox.R
 import cz.mendelu.souvenirbox.ui.theme.halfMargin
 
 @Composable
@@ -59,7 +59,7 @@ fun InfoElement(
                     focusManager.clearFocus()
                 }) {
                     Icon(
-                        painter = rememberVectorPainter(Icons.Filled.Clear),
+                        painter = painterResource(R.drawable.close),
                         tint = Color.Black,
                         contentDescription = "Clear"
                     )

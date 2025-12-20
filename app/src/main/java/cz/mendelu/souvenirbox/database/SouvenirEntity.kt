@@ -2,6 +2,9 @@ package cz.mendelu.souvenirbox.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.clustering.ClusterItem
+import java.io.Serializable
 
 @Entity(tableName = "souvenirs")
 data class SouvenirEntity (
@@ -17,4 +20,22 @@ data class SouvenirEntity (
     var date: Long,
     var notes: String,
     var imageUri: String?
-)
+): ClusterItem, Serializable {
+
+    override fun getPosition(): LatLng {
+        return LatLng(latitude, longitude)
+    }
+
+    override fun getTitle(): String {
+        return name
+    }
+
+    override fun getSnippet(): String {
+        return name
+    }
+
+    override fun getZIndex(): Float {
+        return 0.0f
+    }
+
+}

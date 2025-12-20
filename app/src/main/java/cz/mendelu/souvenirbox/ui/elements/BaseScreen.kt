@@ -1,13 +1,12 @@
 package cz.mendelu.souvenirbox.ui.elements
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -54,7 +53,7 @@ fun BaseScreen(
                                 modifier = Modifier.testTag(TestTagBackButton),
                                 onClick = onBackClick) {
                                 Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    painter = painterResource(R.drawable.arrow_back),
                                     contentDescription = stringResource(R.string.back),
                                 )
                             }
