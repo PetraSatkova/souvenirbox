@@ -1,12 +1,40 @@
 package cz.mendelu.souvenirbox.ui.screens.dashboard
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.rememberAsyncImagePainter
+import cz.mendelu.souvenirbox.R
+import cz.mendelu.souvenirbox.database.SouvenirEntity
 import cz.mendelu.souvenirbox.navigation.INavigationRouter
 import cz.mendelu.souvenirbox.ui.elements.BaseScreen
+import cz.mendelu.souvenirbox.ui.theme.basicMargin
 
 @Composable
 fun DashboardScreen(
@@ -18,17 +46,80 @@ fun DashboardScreen(
 
     BaseScreen(
         topBarText = "Dashboard",
-        showLoading = true
+        showLoading = state.value.loading
     ) {
         DashboardScreenContent(
             paddingValues = it,
+            state = state.value
         )
     }
 }
 
 @Composable
 fun DashboardScreenContent(
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    state: DashboardUIState
 ) {
-    Text("hola")
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(18.dp)
+    ) {
+        Text("Recently added souvenirs", style = MaterialTheme.typography.titleMedium)
+
+        Carousel(souvenirs = state.recentSouvenirs)
+
+        Text("Favourite souvenirs", style = MaterialTheme.typography.titleMedium)
+
+        Carousel(souvenirs = state.favouriteSouvenirs)
+    }
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Carousel(souvenirs: List<SouvenirEntity>) {
+    if (souvenirs.isEmpty()) {
+        // no images
+        Text(
+            "No souvenirs yet",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        return
+    }
+
+    // images
+    HorizontalMultiBrowseCarousel(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(160.dp),
+        state = rememberCarouselState { souvenirs.size },
+        preferredItemWidth = 240.dp,
+        itemSpacing = 12.dp
+    ) { index ->
+
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .maskClip(RoundedCornerShape(24.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+        ) {
+            val uri = souvenirs[index].imageUri
+
+            Image(
+                painter = if (uri.isNullOrEmpty())
+                    painterResource(R.drawable.undraw_image_folder)
+                else
+                    rememberAsyncImagePainter(uri),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(12.dp)
+            )
+        }
+    }
 }

@@ -18,6 +18,7 @@ data class SouvenirEntity (
     var price: Double,
     var currency: String,
     var date: Long,
+    var isFavourite: Boolean,
     var notes: String,
     var imageUri: String?
 ): ClusterItem, Serializable {

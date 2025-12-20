@@ -113,6 +113,7 @@ class AddEditViewModel @Inject constructor(
                 price = _uiState.value.price ?: 0.0,
                 currency = _uiState.value.currency ?: "EUR",
                 date = _uiState.value.date ?: System.currentTimeMillis(),
+                isFavourite = false,
                 notes = _uiState.value.notes ?: "",
                 imageUri = _uiState.value.imageUri ?: ""
             )
