@@ -131,6 +131,7 @@ fun AddEditScreenContent(
 
         Spacer(modifier = Modifier.height(basicMargin()))
 
+        // name
         CustomTextField(
             title = "Name",
             value = state.name ?: "",
@@ -145,7 +146,7 @@ fun AddEditScreenContent(
 
         Spacer(modifier = Modifier.height(halfMargin()))
 
-        // todo show map - nebude mat onvaluechange, ale bude clickable
+        // TODO show map - nebude mat onvaluechange, ale bude clickable
         CustomTextField(
             title = "Location",
             value = "Oslo",
@@ -168,6 +169,7 @@ fun AddEditScreenContent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(quarterMargin())
         ) {
+            // price
             CustomTextField(
                 title = "Price",
                 value = state.price?.toString() ?: "",
@@ -183,6 +185,7 @@ fun AddEditScreenContent(
                 modifier = Modifier
                     .weight(1f)
             ) {
+                // currency
                 CustomTextField(
                     title = "Currency",
                     value = state.currency ?: "",
@@ -227,6 +230,7 @@ fun AddEditScreenContent(
             )
         }
 
+        // date
         InfoElement(
             value = if (state.date != null) DateUtils.getDateString(state.date!!) else null,
             hint = "Date",
@@ -242,6 +246,7 @@ fun AddEditScreenContent(
 
         Spacer(modifier = Modifier.height(halfMargin()))
 
+        // notes
         CustomTextField(
             title = "Notes",
             value = state.notes ?: "",
@@ -255,6 +260,7 @@ fun AddEditScreenContent(
 
         Spacer(modifier = Modifier.height(basicMargin()))
 
+        // save
         Button(
             onClick = {
                 actions.saveSouvenir(

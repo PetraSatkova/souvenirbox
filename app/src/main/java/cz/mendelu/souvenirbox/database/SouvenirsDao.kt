@@ -13,10 +13,13 @@ interface SouvenirsDao {
     suspend fun getAllSouvenirs(): List<SouvenirEntity>
     @Query("SELECT * FROM souvenirs WHERE id = :id")
     suspend fun getSouvenirById(id: Long): SouvenirEntity
+    @Query("UPDATE souvenirs SET isFavourite = NOT isFavourite WHERE id = :id")
+    suspend fun updateFavourite(id: Long)
     @Insert
     suspend fun createSouvenir(souvenir: SouvenirEntity): Long
     @Update
     suspend fun updateSouvenir(souvenir: SouvenirEntity)
+
     @Delete
     suspend fun deleteSouvenir(souvenir: SouvenirEntity)
 }

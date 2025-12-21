@@ -22,6 +22,10 @@ class SouvenirsLocalRepositoryImpl @Inject constructor(
         return souvenirsDao.updateSouvenir(souvenir)
     }
 
+    override suspend fun updateFavourite(id: Long) {
+        return souvenirsDao.updateFavourite(id =  id)
+    }
+
     override suspend fun deleteSouvenir(souvenir: SouvenirEntity) {
         return souvenirsDao.deleteSouvenir(souvenir)
 

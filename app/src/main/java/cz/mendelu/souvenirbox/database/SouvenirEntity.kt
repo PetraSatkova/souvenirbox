@@ -15,6 +15,7 @@ data class SouvenirEntity (
     var latitude: Double,
     var longitude: Double,
     var city: String,
+    var country: String,
     var price: Double,
     var currency: String,
     var date: Long,

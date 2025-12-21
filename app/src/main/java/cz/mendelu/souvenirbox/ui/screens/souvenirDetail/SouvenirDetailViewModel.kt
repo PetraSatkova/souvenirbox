@@ -13,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SouvenirDetailViewModel @Inject constructor(
     private val souvenirsLocalRepository: ISouvenirsLocalRepository
-) : ViewModel() {
+) : ViewModel(), SouvenirDetailActions {
 
     private val _uiState: MutableStateFlow<SouvenirDetailUIState> = MutableStateFlow(value = SouvenirDetailUIState())
     val uiState: StateFlow<SouvenirDetailUIState> get() = _uiState
@@ -27,6 +27,15 @@ class SouvenirDetailViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(
                 souvenir = souvenir,
                 loading = false
+            )
+        }
+    }
+
+    override fun deleteSouvenir() {
+        viewModelScope.launch {
+            souvenirsLocalRepository.deleteSouvenir(souvenir = _uiState.value.souvenir!!)
+            _uiState.value = _uiState.value.copy(
+                deleted = true
             )
         }
     }

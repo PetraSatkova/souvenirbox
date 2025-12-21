@@ -6,6 +6,7 @@ data class AddEditUIState(
     var latitude: Double? = null,
     var longitude: Double? = null,
     var city: String? = null,
+    var country: String? = null,
     var price: Double? = null,
     var currency: String? = null,
     var date: Long? = null,

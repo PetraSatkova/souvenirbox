@@ -5,5 +5,6 @@ interface ISouvenirsLocalRepository {
     suspend fun getSouvenirById(id: Long): SouvenirEntity
     suspend fun createSouvenir(souvenir: SouvenirEntity): Long
     suspend fun updateSouvenir(souvenir: SouvenirEntity)
+    suspend fun updateFavourite(id: Long)
     suspend fun deleteSouvenir(souvenir: SouvenirEntity)
 }
