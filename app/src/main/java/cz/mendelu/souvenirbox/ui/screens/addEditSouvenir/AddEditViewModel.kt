@@ -42,7 +42,8 @@ class AddEditViewModel @Inject constructor(
                     price = souvenir.price,
                     currency = souvenir.currency,
                     date = souvenir.date,
-                    notes = souvenir.notes
+                    notes = souvenir.notes,
+                    imageUri = souvenir.imageUri
                 )
             }
         }
@@ -55,10 +56,10 @@ class AddEditViewModel @Inject constructor(
         )
     }
 
-    override fun onLocationChanged() {
+    override fun onLocationChanged(latitude: Double, longitude: Double) {
         _uiState.value = _uiState.value.copy(
-            latitude = 48.1,
-            longitude = 54.8,
+            latitude = latitude,
+            longitude = longitude,
             cityError = false
         )
     }
@@ -137,6 +138,20 @@ class AddEditViewModel @Inject constructor(
         }
     }
 
+    override fun selectPlaceOnMap(
+        context: Context,
+        latitude: Double,
+        longitude: Double
+    ) {
+        viewModelScope.launch {
+            getCityFromLatLng(
+                context = context,
+                latitude = latitude,
+                longitude = longitude
+            )
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     suspend fun getCityFromLatLng(
         context: Context,
@@ -159,14 +174,17 @@ class AddEditViewModel @Inject constructor(
                         ?: address?.adminArea      // e.g. region/state
                         ?: address?.featureName    // last fallback
 
-                    _uiState.value.city = city
+                    _uiState.value = _uiState.value.copy(
+                        city = city,
+                        country = address?.countryName ?: address?.countryCode
+                    )
 
                     continuation.resume(city) { cause, _, _ -> }
                 }
 
                 override fun onError(errorMessage: String?) {
                     if (!continuation.isActive) return
-                    continuation.resume(null) {}
+                    continuation.resume(null) { cause, _, _ -> }
                 }
             })
         } catch (e: IOException) {

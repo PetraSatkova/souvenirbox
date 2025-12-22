@@ -201,7 +201,7 @@ fun SouvenirDetailScreenContent(
             }
         }
 
-        // cards
+        // location card
         item {
             InfoCard(
                 title = "Location",
