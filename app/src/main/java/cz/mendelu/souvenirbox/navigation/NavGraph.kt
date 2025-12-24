@@ -33,7 +33,8 @@ fun NavGraph(
             route = Destination.DashboardScreen.route
         ) {
             DashboardScreen(
-                navigation = navRouter
+                navigation = navRouter,
+                paddingValues = paddingValues
             )
         }
 
@@ -41,7 +42,8 @@ fun NavGraph(
             route = Destination.SouvenirsListScreen.route
         ) {
             SouvenirsListScreen(
-                navigation = navRouter
+                navigation = navRouter,
+                paddingValues = paddingValues
             )
         }
 
@@ -90,7 +92,8 @@ fun NavGraph(
             route = Destination.MapScreen.route
         ) {
             MapScreen(
-                navigation = navRouter
+                navigation = navRouter,
+                paddingValues = paddingValues
             )
         }
 
@@ -98,7 +101,8 @@ fun NavGraph(
             route = Destination.SettingsScreen.route
         ) {
             SettingsScreen(
-                navigation = navRouter
+                navigation = navRouter,
+                paddingValues = paddingValues
             )
         }
     }

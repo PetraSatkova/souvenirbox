@@ -39,17 +39,18 @@ class AddEditViewModel @Inject constructor(
                     longitude = souvenir.longitude,
                     city = souvenir.city,
                     country = souvenir.country,
-                    price = souvenir.price,
+                    price = souvenir.price.toString(),
                     currency = souvenir.currency,
                     date = souvenir.date,
                     notes = souvenir.notes,
-                    imageUri = souvenir.imageUri
+                    imageUri = souvenir.imageUri,
+                    tags = souvenir.tags
                 )
             }
         }
     }
 
-    override fun onNameChanged(text: String) {
+    override fun onNameChanged(text: String?) {
         _uiState.value = _uiState.value.copy(
             name = text,
             nameError = false
@@ -64,7 +65,7 @@ class AddEditViewModel @Inject constructor(
         )
     }
 
-    override fun onPriceChanged(price: Double?) {
+    override fun onPriceChanged(price: String?) {
         _uiState.value = _uiState.value.copy(
             price = price,
             priceError = false
@@ -85,7 +86,7 @@ class AddEditViewModel @Inject constructor(
         )
     }
 
-    override fun onNotesChanged(text: String) {
+    override fun onNotesChanged(text: String?) {
         _uiState.value = _uiState.value.copy(
             notes = text
         )
@@ -106,19 +107,22 @@ class AddEditViewModel @Inject constructor(
             return
         }
 
+        generateTags()
+
         viewModelScope.launch {
             val newSouvenir = SouvenirEntity(
-                name = _uiState.value.name ?: "mystery",
+                name = _uiState.value.name ?: "No name",
                 latitude = _uiState.value.latitude ?: 0.0,
                 longitude = _uiState.value.longitude ?: 0.0,
                 city = _uiState.value.city ?: "",
                 country = _uiState.value.country ?: "",
-                price = _uiState.value.price ?: 0.0,
+                price = _uiState.value.price?.toDouble() ?: 0.0,
                 currency = _uiState.value.currency ?: "EUR",
                 date = _uiState.value.date ?: System.currentTimeMillis(),
                 isFavourite = false,
                 notes = _uiState.value.notes ?: "",
-                imageUri = _uiState.value.imageUri ?: ""
+                imageUri = _uiState.value.imageUri ?: "",
+                tags = _uiState.value.tags
             )
 
             if (id == null) {
@@ -127,17 +131,18 @@ class AddEditViewModel @Inject constructor(
                 souvenirsLocalRepository.updateSouvenir(newSouvenir)
             }
             _uiState.value = _uiState.value.copy(
-                souvenirSaved = true,
                 saveError = false,
                 nameError = false,
                 cityError = false,
                 priceError = false,
                 currencyError = false,
-                dateError = false
+                dateError = false,
+                souvenirSaved = true
             )
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun selectPlaceOnMap(
         context: Context,
         latitude: Double,
@@ -193,36 +198,32 @@ class AddEditViewModel @Inject constructor(
             }
         }
 
-        // Optionally: handle cancellation (Geocoder itself has no cancel API,
-        // so we just ignore callbacks if continuation is cancelled)
-        continuation.invokeOnCancellation {
-            // no-op
-        }
+        continuation.invokeOnCancellation { }
     }
 
     fun isInputValid() : Boolean {
         var error = false
 
-        if (_uiState.value.name == null) {
+        if (_uiState.value.name?.isEmpty() == true) {
             _uiState.value = _uiState.value.copy(
                 nameError = true
             )
             error = true
         }
 
-        if (_uiState.value.latitude == null || _uiState.value.longitude == null) {
+        if (_uiState.value.latitude == null || _uiState.value.longitude == null || _uiState.value.city == null || _uiState.value.country == null) {
             _uiState.value = _uiState.value.copy(
                 cityError = true
             )
             error = true
         }
-        if (_uiState.value.city == null) {
+        if (_uiState.value.city.isNullOrEmpty()) {
             _uiState.value = _uiState.value.copy(
                 cityError = true
             )
             error = true
         }
-        if (_uiState.value.price == null) {
+        if (_uiState.value.price.isNullOrEmpty()) {
             _uiState.value = _uiState.value.copy(
                 priceError = true
             )
@@ -243,10 +244,13 @@ class AddEditViewModel @Inject constructor(
         return error
     }
 
-
     fun souvenirSavedDefault() {
         _uiState.value = _uiState.value.copy(
             souvenirSaved = false
         )
+    }
+
+    private fun generateTags() {
+
     }
 }

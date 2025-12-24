@@ -2,6 +2,7 @@ package cz.mendelu.souvenirbox.ui.screens.dashboard
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,7 @@ import cz.mendelu.souvenirbox.ui.theme.basicMargin
 @Composable
 fun DashboardScreen(
     navigation: INavigationRouter,
+    paddingValues: PaddingValues,
     viewModel: DashboardViewModel = hiltViewModel<DashboardViewModel>()
 ) {
 
@@ -49,38 +51,51 @@ fun DashboardScreen(
         showLoading = state.value.loading
     ) {
         DashboardScreenContent(
-            paddingValues = it,
-            state = state.value
+            paddingValuesBottom = paddingValues,
+            paddingValuesTop = it,
+            state = state.value,
+            navigation = navigation
         )
     }
 }
 
 @Composable
 fun DashboardScreenContent(
-    paddingValues: PaddingValues,
-    state: DashboardUIState
+    paddingValuesBottom: PaddingValues,
+    paddingValuesTop: PaddingValues,
+    state: DashboardUIState,
+    navigation: INavigationRouter
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues)
+            .padding(paddingValuesTop)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
         Text("Recently added souvenirs", style = MaterialTheme.typography.titleMedium)
 
-        Carousel(souvenirs = state.recentSouvenirs)
+        Carousel(
+            souvenirs = state.recentSouvenirs,
+            navigation = navigation
+        )
 
         Text("Favourite souvenirs", style = MaterialTheme.typography.titleMedium)
 
-        Carousel(souvenirs = state.favouriteSouvenirs)
+        Carousel(
+            souvenirs = state.favouriteSouvenirs,
+            navigation = navigation
+        )
     }
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Carousel(souvenirs: List<SouvenirEntity>) {
+fun Carousel(
+    souvenirs: List<SouvenirEntity>,
+    navigation: INavigationRouter
+) {
     if (souvenirs.isEmpty()) {
         // no images
         Text(
@@ -119,6 +134,9 @@ fun Carousel(souvenirs: List<SouvenirEntity>) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(12.dp)
+                    .clickable {
+                        navigation.navigateToSouvenirDetail(souvenirs[index].id!!)
+                    }
             )
         }
     }

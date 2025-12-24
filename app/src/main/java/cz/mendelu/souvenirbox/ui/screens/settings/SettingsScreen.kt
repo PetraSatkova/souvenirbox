@@ -36,15 +36,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import cz.mendelu.souvenirbox.R
 import cz.mendelu.souvenirbox.navigation.INavigationRouter
 import cz.mendelu.souvenirbox.ui.elements.BaseScreen
-import cz.mendelu.souvenirbox.ui.theme.halfMargin
 
 @Composable
 fun SettingsScreen(
     navigation: INavigationRouter,
+    paddingValues: PaddingValues,
     viewModel: SettingsViewModel = hiltViewModel<SettingsViewModel>()
 ) {
 
@@ -53,7 +53,8 @@ fun SettingsScreen(
         showLoading = false
     ) {
         SettingsScreenContent(
-            paddingValues = it,
+            paddingValuesBottom = paddingValues,
+            paddingValuesTop = it,
             viewModel = viewModel
         )
     }
@@ -62,7 +63,8 @@ fun SettingsScreen(
 
 @Composable
 fun SettingsScreenContent(
-    paddingValues: PaddingValues,
+    paddingValuesBottom: PaddingValues,
+    paddingValuesTop: PaddingValues,
     viewModel: SettingsViewModel
 ) {
     // TODO from DataStore
@@ -79,7 +81,7 @@ fun SettingsScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues)
+            .padding(paddingValuesTop)
             .padding(horizontal = 20.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {

@@ -21,7 +21,8 @@ data class SouvenirEntity (
     var date: Long,
     var isFavourite: Boolean,
     var notes: String,
-    var imageUri: String?
+    var imageUri: String?,
+    var tags: List<String>?
 ): ClusterItem, Serializable {
 
     override fun getPosition(): LatLng {

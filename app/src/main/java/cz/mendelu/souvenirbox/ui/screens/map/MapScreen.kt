@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MapScreen(
     navigation: INavigationRouter,
+    paddingValues: PaddingValues,
     viewModel: MapViewModel = hiltViewModel<MapViewModel>()
 ) {
 
@@ -46,7 +47,8 @@ fun MapScreen(
         showLoading = state.value.loading
     ) {
         MapScreenContent(
-            paddingValues = it,
+            paddingValuesBottom = paddingValues,
+            paddingValuesTop = it,
             state = state.value,
             navigation = navigation
         )
@@ -56,7 +58,8 @@ fun MapScreen(
 @OptIn(ExperimentalMaterial3Api::class, MapsComposeExperimentalApi::class)
 @Composable
 fun MapScreenContent(
-    paddingValues: PaddingValues,
+    paddingValuesBottom: PaddingValues,
+    paddingValuesTop: PaddingValues,
     state: MapUIState,
     navigation: INavigationRouter
 ) {
@@ -84,7 +87,10 @@ fun MapScreenContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues)
+            .padding(
+                top = paddingValuesTop.calculateTopPadding(),
+                bottom = paddingValuesBottom.calculateBottomPadding()
+            )
     ) {
         GoogleMap(
             modifier = Modifier.fillMaxSize(),

@@ -7,11 +7,12 @@ data class AddEditUIState(
     var longitude: Double? = null,
     var city: String? = null,
     var country: String? = null,
-    var price: Double? = null,
+    var price: String? = null,
     var currency: String? = null,
     var date: Long? = null,
     var notes: String? = null,
     var imageUri: String? = null,
+    var tags: List<String>? = null,
 
     var loading: Boolean = true,
     var souvenirSaved: Boolean = false,

@@ -21,7 +21,7 @@ class SouvenirsListViewModel @Inject constructor(
         viewModelScope.launch {
             val souvenirs = souvenirsLocalRepository.getAllSouvenirs()
             _uiState.value = _uiState.value.copy(
-                souvenirs = souvenirs,
+                souvenirs = souvenirs.sortedByDescending { it.date },
                 loading = false
             )
 

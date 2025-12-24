@@ -4,12 +4,12 @@ import android.content.Context
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 interface AddEditActions {
-    fun onNameChanged(text: String)
+    fun onNameChanged(text: String?)
     fun onLocationChanged(latitude: Double, longitude: Double)
-    fun onPriceChanged(price: Double?)
+    fun onPriceChanged(price: String?)
     fun onCurrencyChanged(currency: String)
     fun onDateChanged(date: Long?)
-    fun onNotesChanged(text: String)
+    fun onNotesChanged(text: String?)
     fun onPhotoChanged(uri: android.net.Uri)
     fun saveSouvenir(
         context: Context,
