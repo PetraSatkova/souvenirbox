@@ -8,26 +8,34 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cz.mendelu.souvenirbox.analyzers.ImageTagger
 import cz.mendelu.souvenirbox.database.ISouvenirsLocalRepository
 import cz.mendelu.souvenirbox.database.SouvenirEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.collections.emptyList
 import kotlin.collections.firstOrNull
+import androidx.core.net.toUri
 
 @HiltViewModel
 class AddEditViewModel @Inject constructor(
     private val souvenirsLocalRepository: ISouvenirsLocalRepository
 ) : ViewModel(), AddEditActions {
 
-    private val _uiState: MutableStateFlow<AddEditUIState> = MutableStateFlow(value = AddEditUIState())
+    private val _uiState: MutableStateFlow<AddEditUIState> =
+        MutableStateFlow(value = AddEditUIState())
     val uiState: StateFlow<AddEditUIState> get() = _uiState
 
+    private val imageTagger: ImageTagger = ImageTagger()
+    
     fun loadSouvenir(id: Long?) {
         if (id != null) {
             viewModelScope.launch {
@@ -103,19 +111,19 @@ class AddEditViewModel @Inject constructor(
         context: Context,
         id: Long?
     ) {
-        if (!isInputValid()) {
+        if (isInputValid()) {
             return
         }
 
-        generateTags()
-
         viewModelScope.launch {
+            createTags(context)
+
             val newSouvenir = SouvenirEntity(
                 name = _uiState.value.name ?: "No name",
                 latitude = _uiState.value.latitude ?: 0.0,
                 longitude = _uiState.value.longitude ?: 0.0,
-                city = _uiState.value.city ?: "",
-                country = _uiState.value.country ?: "",
+                city = _uiState.value.city ?: "Na vi",
+                country = _uiState.value.country ?: "Pandora",
                 price = _uiState.value.price?.toDouble() ?: 0.0,
                 currency = _uiState.value.currency ?: "EUR",
                 date = _uiState.value.date ?: System.currentTimeMillis(),
@@ -201,33 +209,32 @@ class AddEditViewModel @Inject constructor(
         continuation.invokeOnCancellation { }
     }
 
-    fun isInputValid() : Boolean {
+    fun isInputValid(): Boolean {
         var error = false
 
-        if (_uiState.value.name?.isEmpty() == true) {
+        if (_uiState.value.name.isNullOrEmpty()) {
             _uiState.value = _uiState.value.copy(
                 nameError = true
             )
             error = true
         }
 
-        if (_uiState.value.latitude == null || _uiState.value.longitude == null || _uiState.value.city == null || _uiState.value.country == null) {
+        if (_uiState.value.latitude == null ||
+            _uiState.value.longitude == null ||
+            _uiState.value.city.isNullOrEmpty() ||
+            _uiState.value.country.isNullOrEmpty()
+            ) {
             _uiState.value = _uiState.value.copy(
                 cityError = true
             )
             error = true
         }
-        if (_uiState.value.city.isNullOrEmpty()) {
-            _uiState.value = _uiState.value.copy(
-                cityError = true
-            )
-            error = true
-        }
+        
         if (_uiState.value.price.isNullOrEmpty()) {
             _uiState.value = _uiState.value.copy(
                 priceError = true
             )
-            return false
+            error = true
         }
         if (_uiState.value.currency == null) {
             _uiState.value = _uiState.value.copy(
@@ -250,7 +257,23 @@ class AddEditViewModel @Inject constructor(
         )
     }
 
-    private fun generateTags() {
+    private suspend fun createTags(
+        context: Context
+    ) {
+        if (_uiState.value.imageUri == null) return
 
+        val tags = try {
+            withContext(Dispatchers.IO) {
+                imageTagger.generateTags(
+                    context = context,
+                    imageUri = _uiState.value.imageUri?.toUri()!!
+                )
+            }
+        } catch (e: Exception) {
+            emptyList()
+        }
+        _uiState.value = _uiState.value.copy(
+            tags = tags
+        )
     }
 }

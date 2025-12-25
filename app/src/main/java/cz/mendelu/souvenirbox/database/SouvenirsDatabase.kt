@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room.databaseBuilder
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
-@Database(entities = [SouvenirEntity::class], version = 9, exportSchema = true)
+@Database(entities = [SouvenirEntity::class], version = 10, exportSchema = true)
+@TypeConverters(TagsConverter::class)
 abstract class SouvenirsDatabase : RoomDatabase() {
 
     abstract fun souvenirsDao(): SouvenirsDao

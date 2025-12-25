@@ -123,7 +123,6 @@ dependencies {
     ksp(libs.moshi.ksp)
 
     //images
-//    implementation (libs.tedimagepicker)
     implementation(libs.coil.compose)
 
     // Retrofit
@@ -135,4 +134,9 @@ dependencies {
     androidTestImplementation(libs.hilt.android.testing)
     kspAndroidTest(libs.hilt.android.compiler)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // ml kit
+    implementation(libs.image.labeling)
+    implementation(libs.kotlinx.coroutines.play.services)
+
 }

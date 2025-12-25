@@ -24,6 +24,8 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -36,11 +38,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -50,6 +54,8 @@ import cz.mendelu.souvenirbox.navigation.INavigationRouter
 import cz.mendelu.souvenirbox.ui.elements.BaseScreen
 import cz.mendelu.souvenirbox.ui.theme.basicMargin
 import cz.mendelu.souvenirbox.utils.DateUtils
+import java.util.Locale
+import java.util.Locale.getDefault
 
 @Composable
 fun SouvenirDetailScreen(
@@ -83,7 +89,8 @@ fun SouvenirDetailScreen(
     ) {
         SouvenirDetailScreenContent(
             paddingValues = it,
-            state = state.value
+            state = state.value,
+            actions = viewModel
         )
 
     }
@@ -92,7 +99,8 @@ fun SouvenirDetailScreen(
 @Composable
 fun SouvenirDetailScreenContent(
     paddingValues: PaddingValues,
-    state: SouvenirDetailUIState
+    state: SouvenirDetailUIState,
+    actions: SouvenirDetailActions
 ) {
     LazyColumn(
         modifier = Modifier
@@ -141,10 +149,10 @@ fun SouvenirDetailScreenContent(
                 }
             }
         }
-
+        // head
         item {
             Text(
-                text = state.souvenir?.name ?: "name",
+                text = state.souvenir?.name?.uppercase(getDefault()) ?: "NAME",
                 style = MaterialTheme.typography.displayLarge,
                 fontWeight = FontWeight.SemiBold,
                 maxLines = 2,
@@ -164,26 +172,6 @@ fun SouvenirDetailScreenContent(
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                Text(
-                    text = "*",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = state.souvenir?.city ?: "city",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = "*",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = state.souvenir?.country ?: "country",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
             }
         }
 
@@ -194,9 +182,9 @@ fun SouvenirDetailScreenContent(
                 contentPadding = PaddingValues(horizontal = basicMargin())
             ) {
                 items(
-                    count = state.tags?.size ?: 0,
+                    count = state.souvenir?.tags?.size ?: 2,
                 ) { index ->
-                    SmallAssistChip(text = state.tags?.get(index) ?: "tag")
+                    SmallAssistChip(text = state.souvenir?.tags?.get(index) ?: "tag")
                 }
             }
         }
@@ -205,18 +193,10 @@ fun SouvenirDetailScreenContent(
         item {
             InfoCard(
                 title = "Location",
-                subtitle = "Where you got it",
                 content = {
                     LabeledValue(label = "City", value = state.souvenir?.city ?: "city")
                     Spacer(Modifier.height(8.dp))
                     LabeledValue(label = "Country", value = state.souvenir?.country ?: "country")
-                },
-                trailing = {
-                    Icon(
-                        imageVector = Icons.Default.Place,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
                 }
             )
         }
@@ -225,7 +205,6 @@ fun SouvenirDetailScreenContent(
         item {
             InfoCard(
                 title = "Price",
-                subtitle = "Local and your currency",
                 content = {
                     PriceRow(
                         label = "Local (${state.souvenir?.currency})",
@@ -233,7 +212,7 @@ fun SouvenirDetailScreenContent(
                     )
                     Spacer(Modifier.height(10.dp))
                     PriceRow(
-                        label = "My currency from datastore", // TODO from datastore
+                        label = "My currency (${state.souvenir?.currency})", // TODO from datastore
                         value = "My price form api" // TODO from API
                     )
                 }
@@ -244,7 +223,6 @@ fun SouvenirDetailScreenContent(
         item {
             InfoCard(
                 title = "Notes",
-                subtitle = "My thoughts",
                 content = {
                     Text(
                         text = state.souvenir?.notes ?: "No thoughts about this one",
@@ -255,7 +233,24 @@ fun SouvenirDetailScreenContent(
             )
         }
 
+        item {
+
+        }
+
         // delete button
+        item {
+            Button(
+                onClick = {
+                    actions.deleteSouvenir()
+                },
+                modifier = Modifier
+                    .padding(basicMargin())
+                    .fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.delete))
+            ) {
+                Text("Delete")
+            }
+        }
 
     }
 }
@@ -279,7 +274,6 @@ private fun SmallAssistChip(
 @Composable
 private fun InfoCard(
     title: String,
-    subtitle: String,
     content: @Composable ColumnScope.() -> Unit,
     trailing: @Composable (() -> Unit)? = null
 ) {
@@ -292,7 +286,7 @@ private fun InfoCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(basicMargin()),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Row(
@@ -301,7 +295,6 @@ private fun InfoCard(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                    Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 if (trailing != null) {
                     Spacer(Modifier.width(10.dp))

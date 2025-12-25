@@ -399,6 +399,15 @@ fun AddEditScreenContent(
 
         Spacer(modifier = Modifier.height(basicMargin()))
 
+//        Row(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(halfMargin()),
+//            horizontalArrangement = Arrangement.Center
+//        ) {
+//            Text(text = "Tags: ${state.tags?.joinToString(", ")}")
+//        }
+
         // save
         Button(
             onClick = {
