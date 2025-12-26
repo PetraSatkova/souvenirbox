@@ -46,9 +46,9 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(moshi: Moshi, client: OkHttpClient): Retrofit {
+    fun provideCurrencyRetrofit(moshi: Moshi, client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.SERVER_URL)
+            .baseUrl(BuildConfig.SERVER_URL_Currecy)
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()

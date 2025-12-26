@@ -1,6 +1,6 @@
 package cz.mendelu.souvenirbox.di
 
-import cz.mendelu.souvenirbox.communication.CurrencyAPI
+import cz.mendelu.souvenirbox.communication.currency.CurrencyAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

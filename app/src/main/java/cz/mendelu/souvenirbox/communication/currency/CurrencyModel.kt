@@ -1,4 +1,4 @@
-package cz.mendelu.souvenirbox.communication.model
+package cz.mendelu.souvenirbox.communication.currency
 
 data class CurrencyModel(
     val base: String,

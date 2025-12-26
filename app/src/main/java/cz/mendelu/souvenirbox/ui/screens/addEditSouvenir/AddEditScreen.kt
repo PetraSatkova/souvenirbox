@@ -1,5 +1,6 @@
 package cz.mendelu.souvenirbox.ui.screens.addEditSouvenir
 
+import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -124,9 +125,16 @@ fun AddEditScreenContent(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
             uri?.let {
-                // TODO permissions handler?
-                actions.onPhotoChanged(uri)
+                try {
+                    context.contentResolver.takePersistableUriPermission(
+                        uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                } catch (e: SecurityException) {
 
+                }
+
+                actions.onPhotoChanged(it)
             }
         }
     )
@@ -398,15 +406,6 @@ fun AddEditScreenContent(
         )
 
         Spacer(modifier = Modifier.height(basicMargin()))
-
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(halfMargin()),
-//            horizontalArrangement = Arrangement.Center
-//        ) {
-//            Text(text = "Tags: ${state.tags?.joinToString(", ")}")
-//        }
 
         // save
         Button(

@@ -58,7 +58,7 @@ fun SouvenirsListScreen(
         topBarText = "My Souvenirs",
         showLoading = state.value.loading,
         placeholderScreenContent =
-            if (state.value.souvenirs == null) {
+            if (state.value.souvenirs.isNullOrEmpty()) {
                 PlaceholderScreenContent(
                     title = "No places registered yet!",
                     image = R.drawable.undraw_no_data

@@ -1,8 +1,8 @@
 package cz.mendelu.souvenirbox.di
 
-import cz.mendelu.souvenirbox.communication.CurrencyAPI
-import cz.mendelu.souvenirbox.communication.CurrencyRemoteRepositoryImpl
-import cz.mendelu.souvenirbox.communication.ICurrencyRemoteRepository
+import cz.mendelu.souvenirbox.communication.currency.CurrencyAPI
+import cz.mendelu.souvenirbox.communication.currency.CurrencyRemoteRepositoryImpl
+import cz.mendelu.souvenirbox.communication.currency.ICurrencyRemoteRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,4 +17,5 @@ object RemoteRepositoryModule {
     @Singleton
     fun provideCurrencyRemoteRepository(currencyAPI: CurrencyAPI): ICurrencyRemoteRepository =
         CurrencyRemoteRepositoryImpl(currencyAPI)
+
 }

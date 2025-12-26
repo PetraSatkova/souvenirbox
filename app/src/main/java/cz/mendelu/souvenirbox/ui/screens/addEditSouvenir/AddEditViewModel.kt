@@ -47,6 +47,7 @@ class AddEditViewModel @Inject constructor(
                     longitude = souvenir.longitude,
                     city = souvenir.city,
                     country = souvenir.country,
+                    countryCode = souvenir.countryCode,
                     price = souvenir.price.toString(),
                     currency = souvenir.currency,
                     date = souvenir.date,
@@ -124,6 +125,7 @@ class AddEditViewModel @Inject constructor(
                 longitude = _uiState.value.longitude ?: 0.0,
                 city = _uiState.value.city ?: "Na vi",
                 country = _uiState.value.country ?: "Pandora",
+                countryCode = _uiState.value.countryCode ?: "",
                 price = _uiState.value.price?.toDouble() ?: 0.0,
                 currency = _uiState.value.currency ?: "EUR",
                 date = _uiState.value.date ?: System.currentTimeMillis(),
@@ -189,7 +191,8 @@ class AddEditViewModel @Inject constructor(
 
                     _uiState.value = _uiState.value.copy(
                         city = city,
-                        country = address?.countryName ?: address?.countryCode
+                        country = address?.countryName ?: address?.countryCode,
+                        countryCode = address?.countryCode
                     )
 
                     continuation.resume(city) { cause, _, _ -> }

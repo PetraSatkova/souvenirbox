@@ -13,7 +13,7 @@ plugins {
 val properties = Properties()
 properties.load(project.rootProject.file("local.properties").reader())
 
-val server = properties.getProperty("server")
+val serverCurrency: String = properties.getProperty("serverCurrency")
 
 android {
     val versionMajor = 0
@@ -45,7 +45,7 @@ android {
             )
         }
         debug {
-            buildConfigField(type = "String", name = "SERVER_URL", value = server)
+            buildConfigField(type = "String", name = "SERVER_URL_Currecy", value = serverCurrency)
         }
     }
     compileOptions {
@@ -124,6 +124,7 @@ dependencies {
 
     //images
     implementation(libs.coil.compose)
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.3.0")
 
     // Retrofit
     implementation(libs.retrofit)

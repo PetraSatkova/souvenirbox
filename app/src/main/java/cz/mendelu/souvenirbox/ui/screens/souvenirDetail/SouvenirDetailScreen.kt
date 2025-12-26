@@ -44,6 +44,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -67,6 +68,10 @@ fun SouvenirDetailScreen(
 
     LaunchedEffect(key1 = id) {
         viewModel.loadSouvenir(id)
+    }
+
+    if (state.value.deleted) {
+        navigation.returnBack()
     }
 
     BaseScreen(
@@ -102,6 +107,9 @@ fun SouvenirDetailScreenContent(
     state: SouvenirDetailUIState,
     actions: SouvenirDetailActions
 ) {
+    val iso2 = state.souvenir?.countryCode?.trim()?.lowercase(Locale.ROOT)
+    val flagUrl = iso2?.let { "https://flagcdn.com/48x36/$it.png" }
+
     LazyColumn(
         modifier = Modifier
             .padding(paddingValues)
@@ -119,21 +127,20 @@ fun SouvenirDetailScreenContent(
                 Box(
                     modifier = Modifier
                         .size(140.dp)
-                        .clip(shape = RoundedCornerShape(16.dp))
-                        .background(MaterialTheme.colorScheme.primaryContainer),
+                        .clip(shape = RoundedCornerShape(16.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     if (!state.souvenir?.imageUri.isNullOrEmpty()) {
                         AsyncImage(
                             model = state.souvenir.imageUri,
                             contentDescription = null,
-                            contentScale = ContentScale.Fit
+                            contentScale = ContentScale.Crop
                         )
                     } else {
                         Image(
                             painter = painterResource(R.drawable.undraw_image_folder),
                             contentDescription = null,
-                            contentScale = ContentScale.Fit
+                            contentScale = ContentScale.Crop
                         )
                     }
                 }
@@ -142,10 +149,19 @@ fun SouvenirDetailScreenContent(
                     modifier = Modifier
                         .size(80.dp)
                         .clip(shape = CircleShape)
-                        .background(MaterialTheme.colorScheme.primaryContainer),
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
                     contentAlignment = Alignment.Center
                 ) {
-                    // TODO load flag from api
+                    if (flagUrl == null) {
+                        Text("🏳️")
+                    } else {
+                        AsyncImage(
+                            model = flagUrl,
+                            contentDescription = null,
+                            modifier = Modifier.size(54.dp),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
                 }
             }
         }

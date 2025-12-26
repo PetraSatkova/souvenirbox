@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cz.mendelu.souvenirbox.R
 import cz.mendelu.souvenirbox.navigation.INavigationRouter
 import cz.mendelu.souvenirbox.ui.elements.BaseScreen
@@ -48,6 +49,8 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel<SettingsViewModel>()
 ) {
 
+    val state = viewModel.uiState.collectAsStateWithLifecycle()
+
     BaseScreen(
         topBarText = "Settings",
         showLoading = false
@@ -55,7 +58,8 @@ fun SettingsScreen(
         SettingsScreenContent(
             paddingValuesBottom = paddingValues,
             paddingValuesTop = it,
-            viewModel = viewModel
+            viewModel = viewModel,
+            state = state.value
         )
     }
 
@@ -65,12 +69,10 @@ fun SettingsScreen(
 fun SettingsScreenContent(
     paddingValuesBottom: PaddingValues,
     paddingValuesTop: PaddingValues,
-    viewModel: SettingsViewModel
+    viewModel: SettingsViewModel,
+    state: SettingsUIState
 ) {
-    // TODO from DataStore
-    var darkMode by remember { mutableStateOf(false) }
-
-    val languages = listOf("English", "Slovak", "Czech")
+    val languages = listOf("English", "Slovak")
     var selectedLanguage by remember { mutableStateOf(languages.first()) }
     var languageExpanded by remember { mutableStateOf(false) }
 
@@ -85,22 +87,21 @@ fun SettingsScreenContent(
             .padding(horizontal = 20.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
-        // --- Appearance ---
+        // dark mode
         SettingsSection(
             title = "Appearance"
         ) {
             SettingsSwitchRow(
                 iconRes = R.drawable.dark_mode,
                 label = "Dark theme",
-                checked = darkMode,
+                checked = state.darkTheme,
                 onCheckedChange = {
-                    darkMode = it
-                    viewModel.changeTheme()
+                    viewModel.setTheme(it)
                 }
             )
         }
 
-        // --- Preferences ---
+        // language and currency
         SettingsSection(
             title = "Preferences"
         ) {
