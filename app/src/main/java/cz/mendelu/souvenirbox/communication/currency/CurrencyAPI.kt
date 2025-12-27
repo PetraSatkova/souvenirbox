@@ -13,4 +13,8 @@ interface CurrencyAPI {
         @Query("base") base: String,
         @Query("symbols") symbols: String
     ): Response<CurrencyModel>
+
+    @Headers("Content-Type: application/json")
+    @GET("currencies")
+    suspend fun getCurrencies(): Response<Map<String, String>>
 }

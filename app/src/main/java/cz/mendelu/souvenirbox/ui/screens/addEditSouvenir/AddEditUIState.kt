@@ -1,29 +1,30 @@
 package cz.mendelu.souvenirbox.ui.screens.addEditSouvenir
 
 data class AddEditUIState(
-    var id: Long? = null,
-    var name: String? = null,
-    var latitude: Double? = null,
-    var longitude: Double? = null,
-    var city: String? = null,
-    var country: String? = null,
-    var countryCode: String? = null,
-    var price: String? = null,
-    var currency: String? = null,
-    var date: Long? = null,
-    var notes: String? = null,
-    var imageUri: String? = null,
-    var tags: List<String>? = null,
+    val id: Long? = null,
+    val name: String? = null,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
+    val city: String? = null,
+    val country: String? = null,
+    val countryCode: String? = null,
+    val price: String? = null,
+    val currency: String? = null,
+    val date: Long? = null,
+    val notes: String? = null,
+    val imageUri: String? = null,
+    val tags: List<String>? = null,
 
-    var loading: Boolean = true,
-    var souvenirSaved: Boolean = false,
-    var saveError: Boolean = false,
+    val loading: Boolean = true,
+    val souvenirSaved: Boolean = false,
+    val saveError: Boolean = false,
 
-    val currencyList: List<String> = listOf("CZK", "EUR", "USD"),
+    val currencyList: List<String> = emptyList(),
 
-    var nameError: Boolean = false,
-    var cityError: Boolean = false,
-    var priceError: Boolean = false,
-    var currencyError: Boolean = false,
-    var dateError: Boolean = false
+    val nameError: Boolean = false,
+    val cityError: Boolean = false,
+    val priceError: Boolean = false,
+    val currencyError: Boolean = false,
+    val dateError: Boolean = false,
+    val error: Int? = null
 )

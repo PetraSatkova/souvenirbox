@@ -1,7 +1,7 @@
 package cz.mendelu.souvenirbox.communication.currency
 
 import cz.mendelu.souvenirbox.communication.IBaseRemoteRepository
-import cz.petstore2025.communication.CommunicationResult
+import cz.mendelu.souvenirbox.communication.CommunicationResult
 import javax.inject.Inject
 
 class CurrencyRemoteRepositoryImpl @Inject constructor(private val api: CurrencyAPI):
@@ -13,6 +13,12 @@ class CurrencyRemoteRepositoryImpl @Inject constructor(private val api: Currency
                 base = base,
                 symbols = symbols
             )
+        }
+    }
+
+    override suspend fun getCurrencies(): CommunicationResult<Map<String, String>> {
+        return processResponse {
+            api.getCurrencies()
         }
     }
 

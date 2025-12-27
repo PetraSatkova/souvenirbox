@@ -228,8 +228,9 @@ fun SouvenirDetailScreenContent(
                     )
                     Spacer(Modifier.height(10.dp))
                     PriceRow(
-                        label = "My currency (${state.souvenir?.currency})", // TODO from datastore
-                        value = "My price form api" // TODO from API
+                        label = "My currency (${state.myCurrency})",
+                        value = state.priceInMyCurrency.toString()
+
                     )
                 }
             )

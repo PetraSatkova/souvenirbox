@@ -17,14 +17,14 @@ class SplashScreenActivityViewModel @Inject constructor(
     private val _splashScreenState = MutableStateFlow<SplashScreenUiState>(SplashScreenUiState.Default)
     val splashScreenState: StateFlow<SplashScreenUiState> = _splashScreenState
 
-    fun checkAppState(){
-        viewModelScope.launch {
-            if (!dataStoreRepository.getLoginSuccessful()){
-                _splashScreenState.value = SplashScreenUiState.ShowLogin
-            } else {
-                _splashScreenState.value = SplashScreenUiState.ContinueToApp
-            }
-
-        }
-    }
+//    fun checkAppState(){
+//        viewModelScope.launch {
+//            if (!dataStoreRepository.getLoginSuccessful()){
+//                _splashScreenState.value = SplashScreenUiState.ShowLogin
+//            } else {
+//                _splashScreenState.value = SplashScreenUiState.ContinueToApp
+//            }
+//
+//        }
+//    }
 }

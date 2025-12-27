@@ -1,6 +1,4 @@
-package cz.petstore2025.communication
-
-import cz.mendelu.souvenirbox.communication.CommunicationError
+package cz.mendelu.souvenirbox.communication
 
 sealed class CommunicationResult<out T: Any> {
     class Success<out T: Any>(val data: T) : CommunicationResult<T>()

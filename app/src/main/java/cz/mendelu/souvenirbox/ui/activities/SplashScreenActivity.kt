@@ -26,7 +26,7 @@ class SplashScreenActivity : ComponentActivity() {
                 viewModel.splashScreenState.collect { value ->
                     when (value) {
                         is SplashScreenUiState.Default -> {
-                            viewModel.checkAppState()
+                            continueToAList(showLogin = false)
                         }
                         SplashScreenUiState.ContinueToApp -> {
                             continueToAList(showLogin = false)

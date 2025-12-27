@@ -24,10 +24,14 @@ import javax.inject.Inject
 import kotlin.collections.emptyList
 import kotlin.collections.firstOrNull
 import androidx.core.net.toUri
+import cz.mendelu.souvenirbox.R
+import cz.mendelu.souvenirbox.communication.CommunicationResult
+import cz.mendelu.souvenirbox.communication.currency.ICurrencyRemoteRepository
 
 @HiltViewModel
 class AddEditViewModel @Inject constructor(
-    private val souvenirsLocalRepository: ISouvenirsLocalRepository
+    private val souvenirsLocalRepository: ISouvenirsLocalRepository,
+    private val currencyRemoteRepository: ICurrencyRemoteRepository
 ) : ViewModel(), AddEditActions {
 
     private val _uiState: MutableStateFlow<AddEditUIState> =
@@ -56,6 +60,35 @@ class AddEditViewModel @Inject constructor(
                     tags = souvenir.tags
                 )
             }
+        } else {
+            viewModelScope.launch {
+                val currencies = withContext(Dispatchers.IO) {
+                    currencyRemoteRepository.getCurrencies()
+                }
+                when(currencies) {
+                    is CommunicationResult.Success -> {
+                        _uiState.value = _uiState.value.copy(
+                            currencyList = currencies.data.keys.toList()
+                        )
+                    }
+                    is CommunicationResult.ConnectionError -> {
+                        _uiState.value = _uiState.value.copy(
+                            error = R.string.no_internet_connection
+                        )
+                    }
+                    is CommunicationResult.Error -> {
+                        _uiState.value = _uiState.value.copy(
+                            error = R.string.failed_to_load_currencies
+                        )
+                    }
+                    is CommunicationResult.Exception -> {
+                        _uiState.value = _uiState.value.copy(
+                            error = R.string.exception
+                        )
+                    }
+                }
+            }
+
         }
     }
 

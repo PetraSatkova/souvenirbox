@@ -14,6 +14,14 @@ class DataStoreRepositoryImpl(private val context: Context) : IDataStoreReposito
         context.dataStore.data
             .map { prefs -> prefs[booleanPreferencesKey(DataStoreConstants.DARK_THEME)] ?: false }
 
+    override val currencyFlow: Flow<String> =
+        context.dataStore.data
+            .map { prefs -> prefs[stringPreferencesKey(DataStoreConstants.CURRENCY)] ?: "EUR" }
+
+    override val languageFlow: Flow<String> =
+        context.dataStore.data
+            .map { prefs -> prefs[stringPreferencesKey(DataStoreConstants.LANGUAGE)] ?: "en" }
+
 
     override suspend fun setDarkTheme(value: Boolean) {
         val preferencesKey = booleanPreferencesKey(DataStoreConstants.DARK_THEME)
@@ -22,37 +30,44 @@ class DataStoreRepositoryImpl(private val context: Context) : IDataStoreReposito
         }
     }
 
-    override suspend fun setLanguage(value: String) {
-//        val preferencesKey = stringPreferencesKey(DataStoreConstants.LANGUAGE)
-    }
-
-    override suspend fun getLanguage(): String {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun setCurrency(value: String) {
-        TODO("Not yet implemented")
+        val preferencesKey = stringPreferencesKey(DataStoreConstants.CURRENCY)
+        context.dataStore.edit { preferences ->
+            preferences[preferencesKey] = value
+        }
     }
 
     override suspend fun getCurrency(): String {
         TODO("Not yet implemented")
     }
 
-    override suspend fun setLoginSuccessful() {
-        val preferencesKey = booleanPreferencesKey(DataStoreConstants.LOGIN_SUCCESSFUL)
+    override suspend fun setLanguage(value: String) {
+        val preferencesKey = stringPreferencesKey(DataStoreConstants.LANGUAGE)
         context.dataStore.edit { preferences ->
-            preferences[preferencesKey] = true
+            preferences[preferencesKey] = value
         }
     }
 
-    override suspend fun getLoginSuccessful(): Boolean {
-        return try {
-            val preferencesKey = booleanPreferencesKey(DataStoreConstants.LOGIN_SUCCESSFUL)
-            val preferences = context.dataStore.data.first()
-            preferences[preferencesKey] ?: false
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        }
+    override suspend fun getLanguage(): String {
+        TODO("Not yet implemented")
     }
+
+
+//    override suspend fun setLoginSuccessful() {
+//        val preferencesKey = booleanPreferencesKey(DataStoreConstants.LOGIN_SUCCESSFUL)
+//        context.dataStore.edit { preferences ->
+//            preferences[preferencesKey] = true
+//        }
+//    }
+//
+//    override suspend fun getLoginSuccessful(): Boolean {
+//        return try {
+//            val preferencesKey = booleanPreferencesKey(DataStoreConstants.LOGIN_SUCCESSFUL)
+//            val preferences = context.dataStore.data.first()
+//            preferences[preferencesKey] ?: false
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            false
+//        }
+//    }
 }

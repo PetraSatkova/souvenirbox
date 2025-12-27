@@ -1,6 +1,6 @@
 package cz.mendelu.souvenirbox.communication
 
-import cz.petstore2025.communication.CommunicationResult
+import android.util.Log
 import retrofit2.Response
 import java.io.InterruptedIOException
 import java.net.SocketTimeoutException
@@ -18,6 +18,8 @@ interface IBaseRemoteRepository {
             if (call.isSuccessful){
                 if (call.body() != null){
                     // povedlo se a mam data
+                    val body = call.body()
+                    Log.d("Currencies", "body: ${body}")
                     return CommunicationResult.Success(call.body()!!)
                 } else {
                     return CommunicationResult.Error(

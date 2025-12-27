@@ -19,6 +19,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
@@ -50,16 +51,18 @@ fun SettingsScreen(
 ) {
 
     val state = viewModel.uiState.collectAsStateWithLifecycle()
+    val darkTheme = state.value.darkTheme.collectAsStateWithLifecycle()
 
-    BaseScreen(
+     BaseScreen(
         topBarText = "Settings",
         showLoading = false
     ) {
         SettingsScreenContent(
             paddingValuesBottom = paddingValues,
             paddingValuesTop = it,
-            viewModel = viewModel,
-            state = state.value
+            actions = viewModel,
+            state = state.value,
+            darkTheme = darkTheme.value
         )
     }
 
@@ -69,15 +72,14 @@ fun SettingsScreen(
 fun SettingsScreenContent(
     paddingValuesBottom: PaddingValues,
     paddingValuesTop: PaddingValues,
-    viewModel: SettingsViewModel,
-    state: SettingsUIState
+    actions: SettingsViewModel,
+    state: SettingsUIState,
+    darkTheme: Boolean
 ) {
     val languages = listOf("English", "Slovak")
     var selectedLanguage by remember { mutableStateOf(languages.first()) }
     var languageExpanded by remember { mutableStateOf(false) }
 
-    val currencies = listOf("Euro", "USD", "GBP")
-    var selectedCurrency by remember { mutableStateOf(currencies.first()) }
     var currencyExpanded by remember { mutableStateOf(false) }
 
     Column(
@@ -94,14 +96,14 @@ fun SettingsScreenContent(
             SettingsSwitchRow(
                 iconRes = R.drawable.dark_mode,
                 label = "Dark theme",
-                checked = state.darkTheme,
+                checked = darkTheme,
                 onCheckedChange = {
-                    viewModel.setTheme(it)
+                    actions.setTheme(it)
                 }
             )
         }
 
-        // language and currency
+        // language
         SettingsSection(
             title = "Preferences"
         ) {
@@ -120,16 +122,21 @@ fun SettingsScreenContent(
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            // currency
             SettingsDropdownRow(
                 iconRes = R.drawable.currency,
-                selected = selectedCurrency,
+                selected = state.currency,
                 expanded = currencyExpanded,
                 onExpandedChange = { currencyExpanded = it },
-                options = currencies,
+                options = state.currencyOptions,
+                readOnly = true,
+//                query = state.query,
+//                onQueryChange = {
+//                    actions.onQueryChanged(it)
+//                },
                 onSelect = { cur ->
-                    selectedCurrency = cur
+                    actions.setCurrency(cur)
                     currencyExpanded = false
-                    // viewModel.setCurrency(cur) // TODO
                 }
             )
         }
@@ -214,8 +221,17 @@ private fun SettingsDropdownRow(
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
     options: List<String>,
+    readOnly: Boolean = true,
+    query: String? = null,
+    onQueryChange: (String) -> Unit = {},
     onSelect: (String) -> Unit
 ) {
+//    val filteredOptions = if (!readOnly) {
+//        options.filter { it.startsWith(query!!) }
+//    } else {
+//        options
+//    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -233,17 +249,27 @@ private fun SettingsDropdownRow(
 
         ExposedDropdownMenuBox(
             expanded = expanded,
-            onExpandedChange = onExpandedChange,
+            onExpandedChange = { onExpandedChange(!expanded) },
             modifier = Modifier.fillMaxWidth()
         ) {
             OutlinedTextField(
-                value = selected,
-                onValueChange = {},
-                readOnly = true,
+                value = if (readOnly) selected else query!!,
+                onValueChange = {
+                    onQueryChange(it)
+                    if (!expanded) {
+                        onExpandedChange(true)
+                    }
+                },
+                readOnly = readOnly,
                 singleLine = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .menuAnchor(
+                        type = if (readOnly) ExposedDropdownMenuAnchorType.PrimaryNotEditable
+                                else ExposedDropdownMenuAnchorType.PrimaryEditable,
+                        enabled = true
+                    ),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     focusedContainerColor = MaterialTheme.colorScheme.surface
@@ -258,7 +284,11 @@ private fun SettingsDropdownRow(
                 options.forEach { option ->
                     DropdownMenuItem(
                         text = { Text(option) },
-                        onClick = { onSelect(option) }
+                        onClick = {
+                            onSelect(option)
+                            onQueryChange(option)
+                            onExpandedChange(false)
+                        }
                     )
                 }
             }

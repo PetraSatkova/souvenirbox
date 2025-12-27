@@ -351,7 +351,7 @@ fun AddEditScreenContent(
                         isCurrencyExpanded = false
                     }
                 ) {
-                    // for each z api do ui state?
+                    // TODO for each z api do ui state?
                     state.currencyList.forEach { currency ->
                         DropdownMenuItem(
                             text = {
