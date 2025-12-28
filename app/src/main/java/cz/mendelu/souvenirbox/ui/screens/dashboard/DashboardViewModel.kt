@@ -6,6 +6,7 @@ import cz.mendelu.souvenirbox.database.ISouvenirsLocalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,17 +16,17 @@ class DashboardViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<DashboardUIState> = MutableStateFlow(value = DashboardUIState())
-    val uiState: StateFlow<DashboardUIState> get() = _uiState
+    val uiState: StateFlow<DashboardUIState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            val souvenirs = souvenirsLocalRepository.getAllSouvenirs()
-            _uiState.value = _uiState.value.copy(
-                recentSouvenirs = souvenirs.sortedByDescending { it.date },
-                favouriteSouvenirs = souvenirs.filter { it.isFavourite },
-                loading = false
-            )
+            souvenirsLocalRepository.getAllSouvenirs().collect { list ->
+                _uiState.value = _uiState.value.copy(
+                    recentSouvenirs = list.sortedByDescending { it.date },
+                    favouriteSouvenirs = list.filter { it.isFavourite },
+                    loading = false
+                )
+            }
         }
     }
-
 }

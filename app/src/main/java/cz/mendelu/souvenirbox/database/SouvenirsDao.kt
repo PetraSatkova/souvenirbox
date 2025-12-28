@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SouvenirsDao {
     @Query("SELECT * FROM souvenirs")
-    suspend fun getAllSouvenirs(): List<SouvenirEntity>
+    fun getAllSouvenirs(): Flow<List<SouvenirEntity>>
     @Query("SELECT * FROM souvenirs WHERE id = :id")
     suspend fun getSouvenirById(id: Long): SouvenirEntity
     @Query("UPDATE souvenirs SET isFavourite = NOT isFavourite WHERE id = :id")

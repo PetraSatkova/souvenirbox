@@ -1,7 +1,9 @@
 package cz.mendelu.souvenirbox.database
 
+import kotlinx.coroutines.flow.Flow
+
 interface ISouvenirsLocalRepository {
-    suspend fun getAllSouvenirs(): List<SouvenirEntity>
+    fun getAllSouvenirs(): Flow<List<SouvenirEntity>>
     suspend fun getSouvenirById(id: Long): SouvenirEntity
     suspend fun createSouvenir(souvenir: SouvenirEntity): Long
     suspend fun updateSouvenir(souvenir: SouvenirEntity)

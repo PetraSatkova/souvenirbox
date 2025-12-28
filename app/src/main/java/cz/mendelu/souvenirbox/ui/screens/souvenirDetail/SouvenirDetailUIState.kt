@@ -8,5 +8,6 @@ data class SouvenirDetailUIState(
     val myCurrency: String? = null,
     val priceInMyCurrency: Double? = null,
     val deleted: Boolean = false,
-    val error: Int? = null
+    val error: Int? = null,
+    val isFavourite: Boolean = false
 )

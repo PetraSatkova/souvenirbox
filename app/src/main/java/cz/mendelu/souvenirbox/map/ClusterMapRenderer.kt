@@ -14,7 +14,7 @@ class ClusterMapRenderer(
 ) : DefaultClusterRenderer<SouvenirEntity>(context, map, clusterManager)
 {
     override fun shouldRenderAsCluster(cluster: Cluster<SouvenirEntity?>): Boolean {
-        return cluster.size > 5
+        return cluster.size > 2
     }
 
 }

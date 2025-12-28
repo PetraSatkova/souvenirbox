@@ -20,11 +20,12 @@ class MapViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val souvenirs = souvenirsLocalRepository.getAllSouvenirs()
-            _uiState.value = _uiState.value.copy(
-                souvenirs = souvenirs,
-                loading = false
-            )
+            souvenirsLocalRepository.getAllSouvenirs().collect {souvenirs ->
+                _uiState.value = _uiState.value.copy(
+                    souvenirs = souvenirs,
+                    loading = false
+                )
+            }
         }
     }
 }

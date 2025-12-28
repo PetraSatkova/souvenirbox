@@ -51,7 +51,6 @@ fun DashboardScreen(
         showLoading = state.value.loading
     ) {
         DashboardScreenContent(
-            paddingValuesBottom = paddingValues,
             paddingValuesTop = it,
             state = state.value,
             navigation = navigation
@@ -61,7 +60,6 @@ fun DashboardScreen(
 
 @Composable
 fun DashboardScreenContent(
-    paddingValuesBottom: PaddingValues,
     paddingValuesTop: PaddingValues,
     state: DashboardUIState,
     navigation: INavigationRouter
@@ -120,7 +118,6 @@ fun Carousel(
             modifier = Modifier
                 .fillMaxHeight()
                 .maskClip(RoundedCornerShape(24.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant)
         ) {
             val uri = souvenirs[index].imageUri
 

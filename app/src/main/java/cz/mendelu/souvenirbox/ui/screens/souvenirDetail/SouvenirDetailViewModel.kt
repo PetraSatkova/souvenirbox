@@ -103,4 +103,14 @@ class SouvenirDetailViewModel @Inject constructor(
             }
         }
     }
+
+    fun updateFavourite(id: Long) {
+        viewModelScope.launch {
+            souvenirsLocalRepository.updateFavourite(id = id)
+            _uiState.value = _uiState.value.copy(
+                isFavourite = !_uiState.value.isFavourite
+
+            )
+        }
+    }
 }

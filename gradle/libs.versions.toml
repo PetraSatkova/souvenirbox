@@ -37,6 +37,7 @@ coroutines-test = "1.10.2"
 material3 = "1.4.0"
 
 imagelabelling = "17.0.9"
+foundationLayout = "1.10.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -107,6 +108,7 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 
 # ml kit
 image-labeling = { group = "com.google.mlkit", name = "image-labeling", version.ref = "imagelabelling" }
+androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

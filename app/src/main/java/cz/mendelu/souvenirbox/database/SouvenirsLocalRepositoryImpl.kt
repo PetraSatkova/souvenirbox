@@ -1,12 +1,13 @@
 package cz.mendelu.souvenirbox.database
 
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SouvenirsLocalRepositoryImpl @Inject constructor(
     private var souvenirsDao: SouvenirsDao
 ) : ISouvenirsLocalRepository {
 
-    override suspend fun getAllSouvenirs(): List<SouvenirEntity> {
+    override fun getAllSouvenirs(): Flow<List<SouvenirEntity>> {
         return souvenirsDao.getAllSouvenirs()
     }
 

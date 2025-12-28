@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -88,6 +89,18 @@ fun SouvenirDetailScreen(
                 Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = "edit"
+                )
+            }
+
+            IconButton(
+                onClick = {
+                    viewModel.updateFavourite(id = id)
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = "Settings",
+                    tint = if (state.value.isFavourite) Color.Red else Color.Gray
                 )
             }
         }
