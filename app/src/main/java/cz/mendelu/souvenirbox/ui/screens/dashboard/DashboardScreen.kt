@@ -1,31 +1,27 @@
 package cz.mendelu.souvenirbox.ui.screens.dashboard
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -35,13 +31,15 @@ import cz.mendelu.souvenirbox.R
 import cz.mendelu.souvenirbox.database.SouvenirEntity
 import cz.mendelu.souvenirbox.navigation.INavigationRouter
 import cz.mendelu.souvenirbox.ui.elements.BaseScreen
-import cz.mendelu.souvenirbox.ui.theme.basicMargin
+import cz.mendelu.souvenirbox.testTags.TestTagNoSouvenirs
+import cz.mendelu.souvenirbox.testTags.TestTagSouvenirCarousel
 
 @Composable
 fun DashboardScreen(
     navigation: INavigationRouter,
     paddingValues: PaddingValues,
-    viewModel: DashboardViewModel = hiltViewModel<DashboardViewModel>()
+    viewModel: DashboardViewModel = hiltViewModel<DashboardViewModel>(),
+    testSouvenirs: List<SouvenirEntity>? = null
 ) {
 
     val state = viewModel.uiState.collectAsStateWithLifecycle()
@@ -71,44 +69,54 @@ fun DashboardScreenContent(
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
-        Text("Recently added souvenirs", style = MaterialTheme.typography.titleMedium)
+        if (state.recentSouvenirs.isEmpty()) {
+            // no images
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                Text(
+                    "No souvenirs yet",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.testTag(TestTagNoSouvenirs)
+                )
+            }
+        } else {
+            Text("Recently added souvenirs", style = MaterialTheme.typography.titleMedium)
 
-        Carousel(
-            souvenirs = state.recentSouvenirs,
-            navigation = navigation
-        )
+            Carousel(
+                souvenirs = state.recentSouvenirs,
+                navigation = navigation,
+                carouselNum = "1"
+            )
 
-        Text("Favourite souvenirs", style = MaterialTheme.typography.titleMedium)
+            Text("Favourite souvenirs", style = MaterialTheme.typography.titleMedium)
 
-        Carousel(
-            souvenirs = state.favouriteSouvenirs,
-            navigation = navigation
-        )
+            Carousel(
+                souvenirs = state.favouriteSouvenirs,
+                navigation = navigation,
+                carouselNum = "2"
+            )
+        }
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Carousel(
     souvenirs: List<SouvenirEntity>,
-    navigation: INavigationRouter
+    navigation: INavigationRouter,
+    carouselNum: String
 ) {
-    if (souvenirs.isEmpty()) {
-        // no images
-        Text(
-            "No souvenirs yet",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        return
-    }
 
     // images
     HorizontalMultiBrowseCarousel(
         modifier = Modifier
             .fillMaxWidth()
-            .height(160.dp),
+            .height(160.dp)
+            .testTag(TestTagSouvenirCarousel + carouselNum),
         state = rememberCarouselState { souvenirs.size },
         preferredItemWidth = 240.dp,
         itemSpacing = 12.dp

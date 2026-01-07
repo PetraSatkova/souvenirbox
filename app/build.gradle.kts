@@ -27,13 +27,13 @@ android {
 
     defaultConfig {
         applicationId = "cz.mendelu.souvenirbox"
+        testApplicationId = "cz.mendelu.souvenirbox.test"
         minSdk = 26
         targetSdk = 36
         versionCode = myVersionCode
         versionName = myVersionName
 
-        // TODO change to mine
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "cz.mendelu.souvenirbox.HiltTestRunner"
     }
 
     buildTypes {
@@ -136,6 +136,16 @@ dependencies {
     androidTestImplementation(libs.hilt.android.testing)
     kspAndroidTest(libs.hilt.android.compiler)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // Tests
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ui.test.junit4)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.junit)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 
     // ml kit
     implementation(libs.image.labeling)

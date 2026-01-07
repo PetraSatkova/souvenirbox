@@ -5,6 +5,7 @@ import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -153,6 +154,7 @@ class AddEditViewModel @Inject constructor(
             createTags(context)
 
             val newSouvenir = SouvenirEntity(
+                id = id,
                 name = _uiState.value.name ?: "No name",
                 latitude = _uiState.value.latitude ?: 0.0,
                 longitude = _uiState.value.longitude ?: 0.0,
@@ -171,7 +173,8 @@ class AddEditViewModel @Inject constructor(
             if (id == null) {
                 souvenirsLocalRepository.createSouvenir(newSouvenir)
             } else {
-                souvenirsLocalRepository.updateSouvenir(newSouvenir)
+                val itemsAffected = souvenirsLocalRepository.updateSouvenir(newSouvenir)
+                Log.i("EditSouvenir", "Items affected: $itemsAffected")
             }
             _uiState.value = _uiState.value.copy(
                 saveError = false,
@@ -228,17 +231,17 @@ class AddEditViewModel @Inject constructor(
                         countryCode = address?.countryCode
                     )
 
-                    continuation.resume(city) { cause, _, _ -> }
+                    continuation.resume(city) { _, _, _ -> }
                 }
 
                 override fun onError(errorMessage: String?) {
                     if (!continuation.isActive) return
-                    continuation.resume(null) { cause, _, _ -> }
+                    continuation.resume(null) { _, _, _ -> }
                 }
             })
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             if (continuation.isActive) {
-                continuation.resume(null) { cause, _, _ -> }
+                continuation.resume(null) { _, _, _ -> }
             }
         }
 
@@ -305,7 +308,7 @@ class AddEditViewModel @Inject constructor(
                     imageUri = _uiState.value.imageUri?.toUri()!!
                 )
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             emptyList()
         }
         _uiState.value = _uiState.value.copy(

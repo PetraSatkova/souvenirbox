@@ -148,7 +148,7 @@ fun AddEditScreenContent(
     val pickedLatLng = remember(state.latitude, state.longitude) {
         mutableStateOf(
             if (state.latitude != null && state.longitude != null)
-                LatLng(state.latitude!!, state.longitude!!)
+                LatLng(state.latitude, state.longitude)
             else null
         )
     }

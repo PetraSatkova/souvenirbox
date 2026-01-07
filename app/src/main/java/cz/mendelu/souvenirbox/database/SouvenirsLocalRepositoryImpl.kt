@@ -19,7 +19,7 @@ class SouvenirsLocalRepositoryImpl @Inject constructor(
         return souvenirsDao.createSouvenir(souvenir)
     }
 
-    override suspend fun updateSouvenir(souvenir: SouvenirEntity) {
+    override suspend fun updateSouvenir(souvenir: SouvenirEntity): Int {
         return souvenirsDao.updateSouvenir(souvenir)
     }
 

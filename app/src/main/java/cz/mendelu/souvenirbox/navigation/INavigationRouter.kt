@@ -8,7 +8,6 @@ interface INavigationRouter {
     fun navigateToAddEdit(id: Long?)
     fun navigateToMap()
     fun navigateToSettings()
-    fun getNavController(): NavController
     fun returnBack()
 
 }

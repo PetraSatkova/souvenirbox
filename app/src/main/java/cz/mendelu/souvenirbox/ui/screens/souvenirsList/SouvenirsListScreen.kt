@@ -140,7 +140,7 @@ fun SouvenirsListScreenContent(
 
                         Column {
                             Text(
-                                text = souvenir.name,
+                                text = souvenir.name.uppercase(),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface

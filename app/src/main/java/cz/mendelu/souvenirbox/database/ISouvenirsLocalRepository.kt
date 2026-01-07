@@ -6,7 +6,7 @@ interface ISouvenirsLocalRepository {
     fun getAllSouvenirs(): Flow<List<SouvenirEntity>>
     suspend fun getSouvenirById(id: Long): SouvenirEntity
     suspend fun createSouvenir(souvenir: SouvenirEntity): Long
-    suspend fun updateSouvenir(souvenir: SouvenirEntity)
+    suspend fun updateSouvenir(souvenir: SouvenirEntity): Int
     suspend fun updateFavourite(id: Long)
     suspend fun deleteSouvenir(souvenir: SouvenirEntity)
 }

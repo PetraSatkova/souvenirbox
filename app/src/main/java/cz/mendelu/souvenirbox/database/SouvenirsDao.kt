@@ -18,8 +18,7 @@ interface SouvenirsDao {
     @Insert
     suspend fun createSouvenir(souvenir: SouvenirEntity): Long
     @Update
-    suspend fun updateSouvenir(souvenir: SouvenirEntity)
-
+    suspend fun updateSouvenir(souvenir: SouvenirEntity): Int
     @Delete
     suspend fun deleteSouvenir(souvenir: SouvenirEntity)
 }

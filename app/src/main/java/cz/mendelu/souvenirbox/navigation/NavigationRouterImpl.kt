@@ -33,8 +33,6 @@ class NavigationRouterImpl(private val navController: NavController) : INavigati
         navController.navigate(route = Destination.SettingsScreen.route)
     }
 
-    override fun getNavController(): NavController = navController
-
     override fun returnBack() {
         navController.popBackStack()
     }

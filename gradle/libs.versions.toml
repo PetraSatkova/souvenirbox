@@ -39,6 +39,8 @@ material3 = "1.4.0"
 imagelabelling = "17.0.9"
 foundationLayout = "1.10.0"
 
+uiTestJunit4 = "1.9.4"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
@@ -105,6 +107,7 @@ hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testi
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref="hilt-android-compiler"}
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref="coroutines-test"}
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "uiTestJunit4" }
 
 # ml kit
 image-labeling = { group = "com.google.mlkit", name = "image-labeling", version.ref = "imagelabelling" }
