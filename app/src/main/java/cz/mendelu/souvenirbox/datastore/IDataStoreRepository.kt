@@ -11,7 +11,5 @@ interface IDataStoreRepository {
     suspend fun getCurrency(): String
     suspend fun setLanguage(value: String)
     suspend fun getLanguage(): String
-//    suspend fun setLoginSuccessful()
-//    suspend fun getLoginSuccessful(): Boolean
 
 }

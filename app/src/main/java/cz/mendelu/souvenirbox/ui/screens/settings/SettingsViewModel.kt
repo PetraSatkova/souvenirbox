@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -26,16 +27,22 @@ class SettingsViewModel @Inject constructor(
     private val dataStore: IDataStoreRepository
 ) : ViewModel(), SettingsActions
 {
-    private val _uiState: MutableStateFlow<SettingsUIState> = MutableStateFlow(value = SettingsUIState(
-        darkTheme = dataStore.darkThemeFlow.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = false
-        )
-    ))
+    private val _uiState: MutableStateFlow<SettingsUIState> = MutableStateFlow(value = SettingsUIState())
     val uiState: StateFlow<SettingsUIState> get() = _uiState
 
     init {
+        viewModelScope.launch {
+            dataStore.darkThemeFlow.collect { enabled ->
+                _uiState.update { it.copy(darkTheme = enabled) }
+            }
+        }
+
+        viewModelScope.launch {
+            dataStore.currencyFlow.collect { currency ->
+                _uiState.update { it.copy(currency = currency) }
+            }
+        }
+
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
                 currencyApi.getCurrencies()
@@ -75,23 +82,12 @@ class SettingsViewModel @Inject constructor(
     override fun setCurrency(currency: String) {
         viewModelScope.launch {
             dataStore.setCurrency(value = currency)
-            _uiState.value = _uiState.value.copy(currency = currency)
-
         }
     }
 
     override fun setLanguage(language: String) {
         viewModelScope.launch {
-            dataStore.setCurrency(value = language)
-            _uiState.value = _uiState.value.copy(currency = language)
-
+            dataStore.setLanguage(value = language)
         }
     }
-
-    override fun onQueryChanged(query: String) {
-        _uiState.value = _uiState.value.copy(query = query)
-    }
-
-
-
 }

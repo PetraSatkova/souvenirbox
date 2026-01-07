@@ -17,17 +17,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Event
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.Payments
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -114,8 +110,11 @@ fun MapScreenContent(
     val context = LocalContext.current
 
     val cameraPosition = rememberCameraPositionState {
+        val lat = state.souvenirs.firstOrNull()?.latitude ?: 49.195999
+        val lon = state.souvenirs.firstOrNull()?.longitude ?: 16.608419
+
         position = CameraPosition.fromLatLngZoom(
-            LatLng(state.souvenirs[0].latitude, state.souvenirs[0].longitude),
+            LatLng(lat, lon),
             10.0f
         )
     }

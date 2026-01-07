@@ -4,5 +4,4 @@ interface SettingsActions {
     fun setTheme(enabled: Boolean)
     fun setCurrency(currency: String)
     fun setLanguage(language: String)
-    fun onQueryChanged(query: String)
 }

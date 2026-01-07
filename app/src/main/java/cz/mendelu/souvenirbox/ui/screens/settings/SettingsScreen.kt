@@ -51,18 +51,15 @@ fun SettingsScreen(
 ) {
 
     val state = viewModel.uiState.collectAsStateWithLifecycle()
-    val darkTheme = state.value.darkTheme.collectAsStateWithLifecycle()
 
      BaseScreen(
         topBarText = "Settings",
         showLoading = false
     ) {
         SettingsScreenContent(
-            paddingValuesBottom = paddingValues,
-            paddingValuesTop = it,
+            paddingValues = it,
             actions = viewModel,
-            state = state.value,
-            darkTheme = darkTheme.value
+            state = state.value
         )
     }
 
@@ -70,11 +67,9 @@ fun SettingsScreen(
 
 @Composable
 fun SettingsScreenContent(
-    paddingValuesBottom: PaddingValues,
-    paddingValuesTop: PaddingValues,
+    paddingValues: PaddingValues,
     actions: SettingsViewModel,
-    state: SettingsUIState,
-    darkTheme: Boolean
+    state: SettingsUIState
 ) {
     val languages = listOf("English", "Slovak")
     var selectedLanguage by remember { mutableStateOf(languages.first()) }
@@ -85,7 +80,7 @@ fun SettingsScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValuesTop)
+            .padding(paddingValues)
             .padding(horizontal = 20.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
@@ -96,7 +91,7 @@ fun SettingsScreenContent(
             SettingsSwitchRow(
                 iconRes = R.drawable.dark_mode,
                 label = "Dark theme",
-                checked = darkTheme,
+                checked = state.darkTheme,
                 onCheckedChange = {
                     actions.setTheme(it)
                 }
@@ -130,10 +125,6 @@ fun SettingsScreenContent(
                 onExpandedChange = { currencyExpanded = it },
                 options = state.currencyOptions,
                 readOnly = true,
-//                query = state.query,
-//                onQueryChange = {
-//                    actions.onQueryChanged(it)
-//                },
                 onSelect = { cur ->
                     actions.setCurrency(cur)
                     currencyExpanded = false
@@ -226,11 +217,6 @@ private fun SettingsDropdownRow(
     onQueryChange: (String) -> Unit = {},
     onSelect: (String) -> Unit
 ) {
-//    val filteredOptions = if (!readOnly) {
-//        options.filter { it.startsWith(query!!) }
-//    } else {
-//        options
-//    }
 
     Row(
         modifier = Modifier

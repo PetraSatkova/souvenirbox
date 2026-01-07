@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.math.BigDecimal
+import java.math.RoundingMode
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,7 +40,8 @@ class SouvenirDetailViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(
                 souvenir = souvenir,
                 myCurrency = myCurrency,
-                loading = false
+                loading = false,
+                isFavourite = souvenir.isFavourite
             )
 
             convertPrice(
@@ -80,7 +83,9 @@ class SouvenirDetailViewModel @Inject constructor(
                 val rates = currencyRate.data.rates[myCurrency] ?: currencyRate.data.rates.firstNotNullOf { it.value }
 
                 _uiState.value = _uiState.value.copy(
-                    priceInMyCurrency = souvenir.price * rates,
+                    priceInMyCurrency = BigDecimal(souvenir.price * rates)
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .toDouble(),
                     error = null
                 )
             }
@@ -109,7 +114,6 @@ class SouvenirDetailViewModel @Inject constructor(
             souvenirsLocalRepository.updateFavourite(id = id)
             _uiState.value = _uiState.value.copy(
                 isFavourite = !_uiState.value.isFavourite
-
             )
         }
     }
