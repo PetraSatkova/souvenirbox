@@ -7,7 +7,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.navigation.NavHostController
 import cz.mendelu.souvenirbox.mock.DatabaseMock
 import cz.mendelu.souvenirbox.navigation.Destination
-import cz.mendelu.souvenirbox.navigation.FakeNavRouter
+import cz.mendelu.souvenirbox.fake.FakeNavRouter
 import cz.mendelu.souvenirbox.navigation.NavigationRouterImpl
 import cz.mendelu.souvenirbox.testTags.TestTagNoSouvenirs
 import cz.mendelu.souvenirbox.testTags.TestTagSouvenirCarousel

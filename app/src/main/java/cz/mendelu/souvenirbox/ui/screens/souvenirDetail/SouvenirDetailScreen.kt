@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Button
@@ -41,18 +40,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.toLowerCase
-import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import cz.mendelu.souvenirbox.R
 import cz.mendelu.souvenirbox.navigation.INavigationRouter
+import cz.mendelu.souvenirbox.testTags.TestTagSouvenirDetailLocalPrice
+import cz.mendelu.souvenirbox.testTags.TestTagSouvenirDetailMyPrice
+import cz.mendelu.souvenirbox.testTags.TestTagSouvenirDetailTags
 import cz.mendelu.souvenirbox.ui.elements.BaseScreen
 import cz.mendelu.souvenirbox.ui.theme.basicMargin
 import cz.mendelu.souvenirbox.utils.DateUtils
@@ -208,7 +209,8 @@ fun SouvenirDetailScreenContent(
         item {
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(horizontal = basicMargin())
+                contentPadding = PaddingValues(horizontal = basicMargin()),
+                modifier = Modifier.testTag(TestTagSouvenirDetailTags)
             ) {
                 items(
                     count = state.souvenir?.tags?.size ?: 2,
@@ -237,13 +239,15 @@ fun SouvenirDetailScreenContent(
                 content = {
                     PriceRow(
                         label = "Local (${state.souvenir?.currency})",
-                        value = state.souvenir?.price.toString()
+                        value = state.souvenir?.price.toString(),
+                        modifier = Modifier.testTag(TestTagSouvenirDetailLocalPrice)
+
                     )
                     Spacer(Modifier.height(10.dp))
                     PriceRow(
                         label = "My currency (${state.myCurrency})",
-                        value = state.priceInMyCurrency.toString()
-
+                        value = state.priceInMyCurrency.toString(),
+                        modifier = Modifier.testTag(TestTagSouvenirDetailMyPrice)
                     )
                 }
             )
@@ -348,13 +352,26 @@ private fun LabeledValue(label: String, value: String) {
 }
 
 @Composable
-private fun PriceRow(label: String, value: String) {
+private fun PriceRow(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Text(value, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
+        Text(
+            label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            value,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.SemiBold,
+            modifier = modifier
+        )
     }
 }

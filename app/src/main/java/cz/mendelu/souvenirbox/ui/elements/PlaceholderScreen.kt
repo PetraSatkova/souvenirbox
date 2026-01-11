@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import cz.mendelu.souvenirbox.testTags.TestTagPlaceholder
 import cz.mendelu.souvenirbox.ui.theme.basicMargin
 
 const val TestTagPlaceHolderImage = "TestTagPlaceHolderImage"
@@ -38,7 +39,9 @@ fun PlaceHolderScreen(
     modifier: Modifier = Modifier,
     content: PlaceholderScreenContent){
     Box(modifier = modifier
-        .fillMaxSize()) {
+        .fillMaxSize()
+        .testTag(TestTagPlaceholder))
+    {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier

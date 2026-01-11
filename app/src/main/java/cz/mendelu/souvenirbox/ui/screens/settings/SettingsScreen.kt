@@ -35,12 +35,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cz.mendelu.souvenirbox.R
 import cz.mendelu.souvenirbox.navigation.INavigationRouter
+import cz.mendelu.souvenirbox.testTags.TestTagCurrencyDropdown
+import cz.mendelu.souvenirbox.testTags.TestTagDarkThemeSwitch
 import cz.mendelu.souvenirbox.ui.elements.BaseScreen
 
 @Composable
@@ -68,7 +71,7 @@ fun SettingsScreen(
 @Composable
 fun SettingsScreenContent(
     paddingValues: PaddingValues,
-    actions: SettingsViewModel,
+    actions: SettingsActions,
     state: SettingsUIState
 ) {
     val languages = listOf("English", "Slovak")
@@ -94,7 +97,8 @@ fun SettingsScreenContent(
                 checked = state.darkTheme,
                 onCheckedChange = {
                     actions.setTheme(it)
-                }
+                },
+                modifier = Modifier.testTag(TestTagDarkThemeSwitch)
             )
         }
 
@@ -119,6 +123,7 @@ fun SettingsScreenContent(
 
             // currency
             SettingsDropdownRow(
+                modifier = Modifier.testTag(TestTagCurrencyDropdown),
                 iconRes = R.drawable.currency,
                 selected = state.currency,
                 expanded = currencyExpanded,
@@ -174,7 +179,8 @@ private fun SettingsSwitchRow(
     @DrawableRes iconRes: Int,
     label: String,
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = Modifier
@@ -199,7 +205,8 @@ private fun SettingsSwitchRow(
 
         Switch(
             checked = checked,
-            onCheckedChange = onCheckedChange
+            onCheckedChange = onCheckedChange,
+            modifier = modifier
         )
     }
 }
@@ -207,6 +214,7 @@ private fun SettingsSwitchRow(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsDropdownRow(
+    modifier: Modifier = Modifier,
     @DrawableRes iconRes: Int,
     selected: String,
     expanded: Boolean,
@@ -215,7 +223,7 @@ private fun SettingsDropdownRow(
     readOnly: Boolean = true,
     query: String? = null,
     onQueryChange: (String) -> Unit = {},
-    onSelect: (String) -> Unit
+    onSelect: (String) -> Unit,
 ) {
 
     Row(
@@ -265,7 +273,8 @@ private fun SettingsDropdownRow(
 
             ExposedDropdownMenu(
                 expanded = expanded,
-                onDismissRequest = { onExpandedChange(false) }
+                onDismissRequest = { onExpandedChange(false) },
+                modifier = modifier
             ) {
                 options.forEach { option ->
                     DropdownMenuItem(

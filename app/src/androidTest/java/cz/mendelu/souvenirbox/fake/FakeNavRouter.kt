@@ -1,7 +1,9 @@
-package cz.mendelu.souvenirbox.navigation
+package cz.mendelu.souvenirbox.fake
 
+import cz.mendelu.souvenirbox.navigation.INavigationRouter
 
-class FakeNavRouter: INavigationRouter {
+class FakeNavRouter (
+): INavigationRouter {
     override fun navigateToSouvenirsList() {
     }
 

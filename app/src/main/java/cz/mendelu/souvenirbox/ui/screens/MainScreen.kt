@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
@@ -24,6 +25,7 @@ import cz.mendelu.souvenirbox.navigation.Destination
 import cz.mendelu.souvenirbox.navigation.INavigationRouter
 import cz.mendelu.souvenirbox.navigation.NavGraph
 import cz.mendelu.souvenirbox.navigation.NavigationRouterImpl
+import cz.mendelu.souvenirbox.testTags.TestTagAddSouvenirButton
 import cz.mendelu.souvenirbox.ui.theme.halfMargin
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -55,7 +57,8 @@ fun MainScreen(
                     onClick = {
                         navRouter.navigateToAddEdit(id = null)
                     },
-                    containerColor = colorResource(R.color.app_tyrkys)
+                    containerColor = colorResource(R.color.app_tyrkys),
+                    modifier = Modifier.testTag(TestTagAddSouvenirButton)
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.add),

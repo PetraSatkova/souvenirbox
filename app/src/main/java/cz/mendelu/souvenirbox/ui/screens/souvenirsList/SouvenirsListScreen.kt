@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -35,22 +35,25 @@ import coil3.compose.rememberAsyncImagePainter
 import cz.mendelu.souvenirbox.R
 import cz.mendelu.souvenirbox.database.SouvenirEntity
 import cz.mendelu.souvenirbox.navigation.INavigationRouter
+import cz.mendelu.souvenirbox.testTags.TestTagSouvenirList
 import cz.mendelu.souvenirbox.ui.elements.BaseScreen
 import cz.mendelu.souvenirbox.ui.elements.PlaceholderScreenContent
 import cz.mendelu.souvenirbox.ui.theme.basicMargin
 import cz.mendelu.souvenirbox.ui.theme.quarterMargin
 import cz.mendelu.souvenirbox.utils.DateUtils
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun SouvenirsListScreen(
     navigation: INavigationRouter,
     paddingValues: PaddingValues,
-    viewModel: SouvenirsListViewModel = hiltViewModel<SouvenirsListViewModel>()
+    viewModel: SouvenirsListViewModel = hiltViewModel<SouvenirsListViewModel>(),
+    testState: StateFlow<SouvenirsListUIState>? = null
 ) {
 
-    val state = viewModel.uiState.collectAsStateWithLifecycle()
+    val state = (testState ?: viewModel.uiState).collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = "list") {
+    LaunchedEffect(Unit) {
         viewModel.loadSouvenirs()
     }
 
@@ -89,10 +92,11 @@ fun SouvenirsListScreenContent(
         modifier = Modifier.padding(
             top = paddingValuesTop.calculateTopPadding(),
             bottom = paddingValuesBottom.calculateBottomPadding()
-        ),
+        )
+            .testTag(TestTagSouvenirList),
     ) {
         souvenirs?.forEach { souvenir ->
-            item { // todo my colors
+            item {
                 Card(
                     onClick = {
                         navigation.navigateToSouvenirDetail(souvenir.id!!)

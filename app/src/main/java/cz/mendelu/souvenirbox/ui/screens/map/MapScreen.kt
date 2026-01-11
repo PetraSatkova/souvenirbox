@@ -42,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -58,6 +59,8 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import cz.mendelu.souvenirbox.database.SouvenirEntity
 import cz.mendelu.souvenirbox.map.ClusterMapRenderer
 import cz.mendelu.souvenirbox.navigation.INavigationRouter
+import cz.mendelu.souvenirbox.testTags.TestTagMapRoot
+import cz.mendelu.souvenirbox.testTags.TestTagMapSheet
 import cz.mendelu.souvenirbox.ui.elements.BaseScreen
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -73,22 +76,9 @@ fun MapScreen(
 
     val state = viewModel.uiState.collectAsStateWithLifecycle()
 
-    val isFilterExpanded = remember { mutableStateOf(false) }
-
     BaseScreen(
         topBarText = "Map",
-        showLoading = state.value.loading,
-        actions = {
-            IconButton(onClick = {
-
-            }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.FilterAlt,
-                    contentDescription = "filter"
-                )
-            }
-        }
+        showLoading = state.value.loading
     ) {
         MapScreenContent(
             paddingValuesBottom = paddingValues,
@@ -136,6 +126,7 @@ fun MapScreenContent(
                 top = paddingValuesTop.calculateTopPadding(),
                 bottom = paddingValuesBottom.calculateBottomPadding()
             )
+            .testTag(TestTagMapRoot)
     ) {
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
@@ -177,7 +168,9 @@ fun MapScreenContent(
             sheetState = sheetState,
             dragHandle = { BottomSheetDefaults.DragHandle() }
         ) {
-            SouvenirSheetContent(souvenir = selected!!)
+            Box(Modifier.testTag(TestTagMapSheet)) {
+                SouvenirSheetContent(souvenir = selected!!)
+            }
         }
     }
 }

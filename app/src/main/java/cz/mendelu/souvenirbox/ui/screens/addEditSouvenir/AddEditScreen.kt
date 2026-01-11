@@ -46,6 +46,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -60,6 +61,8 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberUpdatedMarkerState
 import cz.mendelu.souvenirbox.R
 import cz.mendelu.souvenirbox.navigation.INavigationRouter
+import cz.mendelu.souvenirbox.testTags.TestTagAddCurrencyDropdown
+import cz.mendelu.souvenirbox.testTags.TestTagDatePopup
 import cz.mendelu.souvenirbox.ui.elements.BaseScreen
 import cz.mendelu.souvenirbox.ui.elements.CustomDatePickerDialog
 import cz.mendelu.souvenirbox.ui.elements.InfoElement
@@ -349,7 +352,8 @@ fun AddEditScreenContent(
                     expanded = isCurrencyExpanded,
                     onDismissRequest = {
                         isCurrencyExpanded = false
-                    }
+                    },
+                    modifier = Modifier.testTag(TestTagAddCurrencyDropdown)
                 ) {
                     state.currencyList.forEach { currency ->
                         DropdownMenuItem(
@@ -372,7 +376,8 @@ fun AddEditScreenContent(
             CustomDatePickerDialog(
                 date = state.date ,
                 onDateSelected = { actions.onDateChanged(it) },
-                onDismiss = { showDatePicker = false }
+                onDismiss = { showDatePicker = false },
+                modifier = Modifier.testTag(TestTagDatePopup)
             )
         }
 
