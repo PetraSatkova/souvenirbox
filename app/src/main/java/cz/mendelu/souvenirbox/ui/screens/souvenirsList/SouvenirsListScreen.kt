@@ -63,7 +63,7 @@ fun SouvenirsListScreen(
         placeholderScreenContent =
             if (state.value.souvenirs.isNullOrEmpty()) {
                 PlaceholderScreenContent(
-                    title = "No places registered yet!",
+                    title = "No souvenirs registered yet!",
                     image = R.drawable.undraw_no_data
                 )
             } else {

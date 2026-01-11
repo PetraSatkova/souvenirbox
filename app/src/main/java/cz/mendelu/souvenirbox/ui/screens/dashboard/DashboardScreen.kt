@@ -33,6 +33,7 @@ import cz.mendelu.souvenirbox.navigation.INavigationRouter
 import cz.mendelu.souvenirbox.ui.elements.BaseScreen
 import cz.mendelu.souvenirbox.testTags.TestTagNoSouvenirs
 import cz.mendelu.souvenirbox.testTags.TestTagSouvenirCarousel
+import cz.mendelu.souvenirbox.ui.elements.PlaceholderScreenContent
 
 @Composable
 fun DashboardScreen(
@@ -46,7 +47,16 @@ fun DashboardScreen(
 
     BaseScreen(
         topBarText = "Dashboard",
-        showLoading = state.value.loading
+        showLoading = state.value.loading,
+        placeholderScreenContent =
+            if (state.value.recentSouvenirs.isEmpty()) {
+                PlaceholderScreenContent(
+                    title = "No souvenirs registered yet!",
+                    image = R.drawable.undraw_no_data
+                )
+            } else {
+                null
+            }
     ) {
         DashboardScreenContent(
             paddingValuesTop = it,

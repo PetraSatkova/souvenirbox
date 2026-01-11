@@ -190,7 +190,7 @@ fun AddEditScreenContent(
                 },
             contentAlignment = Alignment.Center
         ) {
-            if (state.imageUri != null) {
+            if (!state.imageUri.isNullOrEmpty()) {
                 AsyncImage(
                     model = state.imageUri,
                     contentDescription = "img",
