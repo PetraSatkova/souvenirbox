@@ -8,11 +8,13 @@ import cz.mendelu.souvenirbox.communication.CommunicationResult
 import cz.mendelu.souvenirbox.communication.currency.ICurrencyRemoteRepository
 import cz.mendelu.souvenirbox.database.ISouvenirsLocalRepository
 import cz.mendelu.souvenirbox.datastore.IDataStoreRepository
+import cz.mendelu.souvenirbox.dispatcher.AppDispatchers
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -24,11 +26,12 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val currencyApi: ICurrencyRemoteRepository,
-    private val dataStore: IDataStoreRepository
+    private val dataStore: IDataStoreRepository,
+    private val dispatchers: AppDispatchers
 ) : ViewModel(), SettingsActions
 {
     private val _uiState: MutableStateFlow<SettingsUIState> = MutableStateFlow(value = SettingsUIState())
-    val uiState: StateFlow<SettingsUIState> get() = _uiState
+    val uiState: StateFlow<SettingsUIState> get() = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -44,7 +47,7 @@ class SettingsViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
+            val result = withContext(dispatchers.io) {
                 currencyApi.getCurrencies()
             }
 

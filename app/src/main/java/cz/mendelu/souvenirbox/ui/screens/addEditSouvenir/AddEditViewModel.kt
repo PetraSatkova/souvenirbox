@@ -26,20 +26,20 @@ import kotlin.collections.emptyList
 import kotlin.collections.firstOrNull
 import androidx.core.net.toUri
 import cz.mendelu.souvenirbox.R
+import cz.mendelu.souvenirbox.analyzers.IImageTagger
 import cz.mendelu.souvenirbox.communication.CommunicationResult
 import cz.mendelu.souvenirbox.communication.currency.ICurrencyRemoteRepository
 
 @HiltViewModel
 class AddEditViewModel @Inject constructor(
     private val souvenirsLocalRepository: ISouvenirsLocalRepository,
-    private val currencyRemoteRepository: ICurrencyRemoteRepository
+    private val currencyRemoteRepository: ICurrencyRemoteRepository,
+    private val imageTagger: IImageTagger
 ) : ViewModel(), AddEditActions {
 
     private val _uiState: MutableStateFlow<AddEditUIState> =
         MutableStateFlow(value = AddEditUIState())
     val uiState: StateFlow<AddEditUIState> get() = _uiState
-
-    private val imageTagger: ImageTagger = ImageTagger()
     
     fun loadSouvenir(id: Long?) {
         if (id != null) {
@@ -146,7 +146,7 @@ class AddEditViewModel @Inject constructor(
         context: Context,
         id: Long?
     ) {
-        if (isInputValid()) {
+        if (hasInputError()) {
             return
         }
 
@@ -248,7 +248,7 @@ class AddEditViewModel @Inject constructor(
         continuation.invokeOnCancellation { }
     }
 
-    fun isInputValid(): Boolean {
+    fun hasInputError(): Boolean {
         var error = false
 
         if (_uiState.value.name.isNullOrEmpty()) {

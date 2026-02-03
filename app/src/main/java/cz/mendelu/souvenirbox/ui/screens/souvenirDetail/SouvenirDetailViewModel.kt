@@ -8,6 +8,7 @@ import cz.mendelu.souvenirbox.communication.currency.ICurrencyRemoteRepository
 import cz.mendelu.souvenirbox.database.ISouvenirsLocalRepository
 import cz.mendelu.souvenirbox.database.SouvenirEntity
 import cz.mendelu.souvenirbox.datastore.IDataStoreRepository
+import cz.mendelu.souvenirbox.dispatcher.AppDispatchers
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,8 @@ import javax.inject.Inject
 class SouvenirDetailViewModel @Inject constructor(
     private val souvenirsLocalRepository: ISouvenirsLocalRepository,
     private val currencyRemoteRepository: ICurrencyRemoteRepository,
-    private val dataStore: IDataStoreRepository
+    private val dataStore: IDataStoreRepository,
+    private val dispatchers: AppDispatchers
 ) : ViewModel(), SouvenirDetailActions {
 
     private val _uiState: MutableStateFlow<SouvenirDetailUIState> = MutableStateFlow(value = SouvenirDetailUIState())
@@ -71,7 +73,7 @@ class SouvenirDetailViewModel @Inject constructor(
             return
         }
 
-        val currencyRate = withContext(Dispatchers.IO) {
+        val currencyRate = withContext(dispatchers.io) {
             currencyRemoteRepository.getRates(
                 base = souvenir.currency,
                 symbols = myCurrency
